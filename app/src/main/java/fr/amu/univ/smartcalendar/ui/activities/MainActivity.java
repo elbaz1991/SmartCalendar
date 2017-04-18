@@ -1,4 +1,4 @@
-package fr.amu.univ.smartcalendar;
+package fr.amu.univ.smartcalendar.ui.activities;
 
 
 
@@ -22,6 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import fr.amu.univ.smartcalendar.R;
+import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
