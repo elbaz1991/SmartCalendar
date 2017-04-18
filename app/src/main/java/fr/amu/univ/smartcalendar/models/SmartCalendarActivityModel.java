@@ -1,5 +1,7 @@
 package fr.amu.univ.smartcalendar.models;
 
+import android.content.Context;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,10 @@ public class SmartCalendarActivityModel extends SmartCalendarModel{
 
     private Date end_date;
 
-    public SmartCalendarActivityModel(){ this(0); }
+    public SmartCalendarActivityModel(Context base){ this(base, 0); }
 
-    public SmartCalendarActivityModel(int activityId){
+    public SmartCalendarActivityModel(Context base, int activityId){
+        super(base);
         // TODO: 18/04/2017  implements constructor
     }
 

@@ -1,5 +1,7 @@
 package fr.amu.univ.smartcalendar.models;
 
+import android.content.Context;
+
 /**
  *
  * Created by j.Katende on 18/04/2017.
@@ -14,9 +16,10 @@ public class SmartCalendarAddressModel extends SmartCalendarModel {
 
     private float latitude;
 
-    public SmartCalendarAddressModel(){ this(0); }
+    public SmartCalendarAddressModel(Context base){ this(base, 0); }
 
-    public SmartCalendarAddressModel(int addressId){
+    public SmartCalendarAddressModel(Context context, int addressId){
+        super(context);
         // TODO: 18/04/2017 build constructor
     }
 
