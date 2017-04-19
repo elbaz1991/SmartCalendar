@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="fr.amu.univ.smartcalendar.ui.activities.MainActivity"
+    tools:context="fr.amu.univ.smartcalendar.MainActivity"
     tools:showIn="@layout/app_bar_main">
+
 
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,13 +16,22 @@
         android:layout_width="fill_parent"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:layout_height="250dp"
+        android:layout_height="230dp"
         app:compactCalendarTargetHeight="250dp"
         app:compactCalendarTextSize="12sp"
-        app:compactCalendarBackgroundColor="#727ff4"
-        app:compactCalendarTextColor="#fff"
+        app:compactCalendarBackgroundColor="#619afd"
+        app:compactCalendarTextColor="#ffffff"
         app:compactCalendarCurrentSelectedDayBackgroundColor="#88eaab"
         app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
         app:compactCalendarMultiEventIndicatorColor="#fff"
         />
-</android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/eventList_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+       
+</LinearLayout>
