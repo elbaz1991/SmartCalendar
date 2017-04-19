@@ -3,9 +3,7 @@ package fr.amu.univ.smartcalendar;
 
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import fr.amu.univ.smartcalendar.R;
-import fr.amu.univ.smartcalendar.data.EventEntity;
+import fr.amu.univ.smartcalendar.data.entity.Evenement;
 import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
 
 
@@ -190,13 +186,13 @@ public class MainActivity extends AppCompatActivity
 
     class EventListAdapter extends RecyclerView.Adapter<EventHolder>{
 
-        private List<EventEntity> eventList;
+        private List<Evenement> eventList;
 
         public EventListAdapter(){
             eventList = new ArrayList<>();
-            eventList.add(new EventEntity("walo","helooooooo !"));
-            eventList.add(new EventEntity("Yes","Holaaaaa !"));
-            eventList.add(new EventEntity("No","Amigoooooo !"));
+            eventList.add(new Evenement("walo","helooooooo !"));
+            eventList.add(new Evenement("Yes","Holaaaaa !"));
+            eventList.add(new Evenement("No","Amigoooooo !"));
             notifyDataSetChanged();
         }
 
@@ -236,7 +232,7 @@ public class MainActivity extends AppCompatActivity
             ui_eventTitle = (TextView) cell.findViewById(R.id.eventTitle);
         }
 
-        public void layoutForEvent(EventEntity event){
+        public void layoutForEvent(Evenement event){
             ui_eventTitle.setText(event.getTitre());
         }
     }
