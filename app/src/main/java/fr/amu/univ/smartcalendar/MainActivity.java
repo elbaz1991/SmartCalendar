@@ -31,7 +31,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import fr.amu.univ.smartcalendar.data.entity.Evenement;
+import fr.amu.univ.smartcalendar.model.dao.DatabaseHelper;
+import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
+import fr.amu.univ.smartcalendar.model.entity.Evenement;
 import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
 
 
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity
     private ImageView ui_up_down_imgView;// TextView afficher / cacher -> calendar
     private RecyclerView ui_eventListRecyclerView;
 
+
+    // Base de donnée
+    //DatabaseHelper sqliteDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,9 @@ public class MainActivity extends AppCompatActivity
         ui_eventListRecyclerView = (RecyclerView) findViewById(R.id.eventList_recycler_view);
         ui_eventListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ui_eventListRecyclerView.setAdapter(new EventListAdapter());
+
+
+
     }
 
     @Override
