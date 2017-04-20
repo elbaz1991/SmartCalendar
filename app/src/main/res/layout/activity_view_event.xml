@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2" >
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_title_label"
+            android:text="@string/activity_title_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_title"
+            />
+    </GridLayout>
+    <TextView
+        android:id="@+id/smart_calendar_view_activity_description_label"
+        android:text="@string/activity_description_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+    <TextView
+        android:id="@+id/smart_calendar_view_activity_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+        <TextView
+            android:text="@string/activity_from_label"/>
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_start_on"/>
+        <TextView
+            android:text="@string/activity_at_label"/>
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_start_at"/>
+        <TextView
+            android:text="@string/activity_to_label"
+            />
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_ends_on"/>
+        <TextView
+            android:text="@string/activity_at_label"/>
+        <TextView
+            android:id="@+id/smart_calendar_view_activity_ends_at"/>
+    </GridLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_weather_label"
+        android:layout_marginLeft="10dp"/>
+    <!--android.support.v7.widget.CardView
+        android:id="@+id/activity_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:paddingStart="64dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingEnd="16dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_day_of_week"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:textSize="22sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_day_max_temperature"
+                android:layout_below="@+id/activity_day_of_week"
+                android:textSize="72sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_day_min_temperature"
+                android:layout_below="@+id/activity_day_max_temperature"
+                android:layout_marginTop="8dp"
+                android:textSize="36sp"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/app_photo"
+                android:layout_below="@+id/activity_day_of_week"
+                android:layout_alignParentEnd="true"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_day_weather_type"
+                android:layout_below="@+id/app_photo"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="26dp"
+                android:textSize="22sp"
+                />
+        </RelativeLayout>
+    <!-- /android.support.v7.widget.CardView -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_potential_path_label"
+        android:layout_marginLeft="10dp"/>
+</LinearLayout>

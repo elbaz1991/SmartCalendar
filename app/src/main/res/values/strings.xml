@@ -7,4 +7,32 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_event">Ajouter un évènement</string>
     <string name="text_enregister">Enregistrer</string>
+    <string name="smart_calendar_show_traffic" >Afficher le traffic</string>
+    <string name="smart_calendar_show_location" >Afficher ma position</string>
+    <string name="smart_calendar_show_buildings" >Afficher Immeuble</string>
+    <string name="smart_calendar_show_indoor" >Afficher Interi</string>
+    <string name="smart_calendar_map_not_ready" >map is not ready</string>
+    <string name="smart_calendar_normal_map" >Normal</string>
+    <string name="smart_calendar_hybrid_map" >Hybrid</string>
+    <string name="smart_calendar_satellite_map" >Satellite</string>
+    <string name="smart_calendar_terrain_map" >Terrain</string>
+    <string name="smart_calendar_none_map" >None</string>
+    <string name="smart_calendar_permission_rational_location" ></string>
+    <string name="smart_calendar_permission_required_toast" ></string>
+    <string name="smart_calendar_location_permission_denied" ></string>
+    <string name="smart_calendar_" ></string>
+    <string name="activity_title_label" >Titre :</string>
+    <string name="activity_description_label" >Description : </string>
+    <string name="activity_at_label" > at </string>
+    <string name="activity_from_label" >Du : </string>
+    <string name="activity_to_label" >Au : </string>
+    <string name="activity_weather_label" > Météo </string>
+    <string name="activity_potential_path_label" >Itinéaires</string>
+    <string-array name="layers_array" >
+        <item>@string/smart_calendar_normal_map</item>
+        <item>@string/smart_calendar_hybrid_map</item>
+        <item>@string/smart_calendar_satellite_map</item>
+        <item>@string/smart_calendar_terrain_map</item>
+        <item>@string/smart_calendar_none_map</item>
+    </string-array>
 </resources>

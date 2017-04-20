@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#DDDDDDFF" >
+    <LinearLayout
+        android:id="@+id/smart_calendar_traffic_jam_desc_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@+id/smart_calendar_traffic_jam_icon">
+        <TextView
+            android:id="@+id/smart_calendar_traffic_jam_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="Itineraire XX"
+            android:textSize="28sp" />
+        <TextView
+            android:id="@+id/smart_calendar_traffic_ride_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="Temps de trajet"
+            android:textSize="18sp"/>
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/smart_calendar_traffic_jam_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:src="@drawable/car"
+        />
+</RelativeLayout>

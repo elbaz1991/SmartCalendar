@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.amu.univ.smartcalendar">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +24,15 @@
         <activity
             android:name=".ui.activities.AddEventActivity"
             android:label="@string/title_activity_add_event"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.ViewEventActivity"
+            android:label="@string/title_activity_add_event"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.NavigateToEventActivity"
+            android:label="@string/title_activity_add_event"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
