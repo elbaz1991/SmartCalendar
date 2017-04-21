@@ -20,7 +20,7 @@ public class EvenementDAO extends DatabaseDAO{
     public static final String COL_DATE_FIN = "DateFin";
 
 
-    public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " ( "+
+    public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ( "+
                                                 COL_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
                                                 COL_TITRE +" TEXT,"+
                                                 COL_DESC +" TEXT,"+

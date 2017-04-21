@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
             SimpleDateFormat dateForrma = new SimpleDateFormat("dd - MMMM - yyyy", Locale.FRANCE);
             @Override
             public void onDayClick(Date dateClicked) {
-                Toast.makeText(getApplicationContext(),dateForrma.format(dateClicked).toString(),Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),dateForrma.format(dateClicked).toString(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
