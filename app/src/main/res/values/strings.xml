@@ -17,9 +17,11 @@
     <string name="smart_calendar_satellite_map" >Satellite</string>
     <string name="smart_calendar_terrain_map" >Terrain</string>
     <string name="smart_calendar_none_map" >None</string>
-    <string name="smart_calendar_permission_rational_location" ></string>
-    <string name="smart_calendar_permission_required_toast" ></string>
-    <string name="smart_calendar_location_permission_denied" ></string>
+    <string name="smart_calendar_permission_rational_location" >rational location</string>
+    <string name="smart_calendar_permission_required_toast" >permission exigée</string>
+    <string name="smart_calendar_location_permission_denied" >permission refusée</string>
+    <string name="smart_calendar_itinerary_label" >Itinéraire</string>
+    <string name="smart_calendar_duration_label" >Durée</string>
     <string name="smart_calendar_" ></string>
     <string name="activity_title_label" >Titre :</string>
     <string name="activity_description_label" >Description : </string>

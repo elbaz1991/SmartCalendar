@@ -1,11 +1,17 @@
 apply plugin: 'com.android.application'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "fr.amu.univ.smartcalendar"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -30,7 +36,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile('com.squareup.retrofit2:converter-gson:2.1.0') {
+        exclude module: 'retrofit'
+    }
     compile 'com.github.sundeepk:compact-calendar-view:2.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-maps:10.2.1'
 }
