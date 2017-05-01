@@ -1,8 +1,8 @@
-package fr.amu.univ.smartcalendar.utils.direction.constants;
+package fr.amu.univ.smartcalendar.plugins.direction.constant;
 
 /**
  *
- * Created by j.Katende on 22/04/2017.
+ * Created by j.Katende on 01/05/2017.
  */
 
 public class SmartCalendarTransportMode {

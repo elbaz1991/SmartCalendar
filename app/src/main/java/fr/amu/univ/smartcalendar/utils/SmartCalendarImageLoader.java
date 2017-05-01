@@ -26,7 +26,7 @@ import fr.amu.univ.smartcalendar.R;
 
 /**
  *
- * Created by j.Katende on 24/04/2017.
+ * Created by j.Katende on 01/05/2017.
  */
 
 public class SmartCalendarImageLoader {

@@ -1,10 +1,10 @@
-package fr.amu.univ.smartcalendar.utils.direction.api;
+package fr.amu.univ.smartcalendar.plugins.direction.api;
 
-import fr.amu.univ.smartcalendar.utils.direction.models.SmartCalendarDirectionModel;
+import fr.amu.univ.smartcalendar.plugins.direction.models.SmartCalendarDirectionModel;
 
 /**
  *
- * Created by j.Katende on 22/04/2017.
+ * Created by j.Katende on 30/04/2017.
  */
 
 public interface SmartCalendarGoogleDirectionCallback {

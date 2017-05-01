@@ -1,4 +1,4 @@
-package fr.amu.univ.smartcalendar.utils.direction.constants;
+package fr.amu.univ.smartcalendar.plugins.direction.constant;
 
 /**
  *

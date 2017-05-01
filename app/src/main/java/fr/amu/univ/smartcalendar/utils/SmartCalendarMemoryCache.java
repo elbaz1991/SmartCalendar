@@ -1,5 +1,6 @@
 package fr.amu.univ.smartcalendar.utils;
 
+
 import android.graphics.Bitmap;
 
 import java.lang.ref.SoftReference;

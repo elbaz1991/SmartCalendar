@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginBottom="15dp" >
     <LinearLayout
         android:id="@+id/smart_calendar_traffic_jam_desc_wrapper"
         android:layout_width="match_parent"
@@ -16,20 +17,20 @@
             android:id="@+id/smart_calendar_traffic_jam_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Itineraire XX"
-            android:textSize="28sp" />
+            android:layout_marginStart="5dp"
+            android:textSize="18sp" />
         <TextView
             android:id="@+id/smart_calendar_traffic_ride_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Temps de trajet"
-            android:textSize="18sp"/>
+            android:layout_marginStart="5dp"
+            android:textSize="16sp"/>
         <TextView
             android:id="@+id/smart_calendar_traffic_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textSize="14sp"
             />
     </LinearLayout>
     <LinearLayout

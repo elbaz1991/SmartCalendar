@@ -1,39 +1,29 @@
-package fr.amu.univ.smartcalendar.utils.direction.models;
+package fr.amu.univ.smartcalendar.plugins.direction.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-import fr.amu.univ.smartcalendar.utils.direction.constants.SmartCalendarDirectionRequest;
+import java.util.List;
+
+import fr.amu.univ.smartcalendar.plugins.direction.constant.SmartCalendarDirectionRequest;
 
 /**
  *
- * Created by j.Katende on 22/04/2017.
+ * Created by j.Katende on 30/04/2017.
  */
 
 public class SmartCalendarDirectionModel implements Parcelable {
-    @SerializedName("geocoded_waypoints")
-    private List<SmartCalendarDirectionGeoCodedWayPointModel> geo_coded_way_point_list;
-
     @SerializedName("routes")
     private List<SmartCalendarDirectionRouteModel> map_routes;
 
     private String status;
 
-    @SerializedName("error_message")
-    private String error_message;
-
     public SmartCalendarDirectionModel(){}
 
     public SmartCalendarDirectionModel(Parcel in){
         status = in.readString();
-        error_message = in.readString();
-    }
-
-    public void setGeoCodedWayPointList(List geoCodedWayPointList){
-        this.geo_coded_way_point_list = geoCodedWayPointList;
     }
 
     public boolean isOk(){
@@ -48,6 +38,15 @@ public class SmartCalendarDirectionModel implements Parcelable {
         return map_routes;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeString(status);
+    }
 
     public static final Creator<SmartCalendarDirectionModel> CREATOR = new Creator<SmartCalendarDirectionModel>() {
         @Override
@@ -60,14 +59,4 @@ public class SmartCalendarDirectionModel implements Parcelable {
             return new SmartCalendarDirectionModel[0];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
-    }
 }

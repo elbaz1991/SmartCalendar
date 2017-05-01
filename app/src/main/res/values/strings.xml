@@ -22,7 +22,11 @@
     <string name="smart_calendar_location_permission_denied" >permission refusée</string>
     <string name="smart_calendar_itinerary_label" >Itinéraire</string>
     <string name="smart_calendar_duration_label" >Durée</string>
+    <string name="smart_calendar_distance_label" >Distance</string>
     <string name="smart_calendar_" ></string>
+    <string name="smart_calendar_weather_temperature_separator" >|</string>
+    <string name="smart_calendar_max_temperature_label" >Max</string>
+    <string name="smart_calendar_min_temperature_label" >Min</string>
     <string name="activity_title_label" >Titre :</string>
     <string name="activity_description_label" >Description : </string>
     <string name="activity_at_label" > at </string>
