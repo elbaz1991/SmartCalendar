@@ -2,6 +2,8 @@ package fr.amu.univ.smartcalendar.adapters;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,20 +51,38 @@ public class SmartCalendarNavigationAdapter {
         trafficDistance.setText(context.getResources().getString(R.string.smart_calendar_distance_label) + " : " + renderData.get(ViewEventActivity.TRAFFIC_KEY_DISTANCE));
         ImageView transportMode = (ImageView)view.findViewById(R.id.smart_calendar_traffic_jam_icon);
         SmartCalendarImageLoader imageLoader = new SmartCalendarImageLoader(context);
-        String fileDirectory = "";
+        //context.getResources().getDrawable(R.drawable.bicycle).get
+        String fileDirectory = "android.resource://fr.amu.univ.smartcalendar/drawable/";
+        String path;
         switch (renderData.get(ViewEventActivity.TRAFFIC_KEY_TRANSPORT_MODE)){
             case SmartCalendarTransportMode.BICYCLING:
-                imageLoader.displayImage(fileDirectory + "bicycle.png", transportMode);
+                if(Build.VERSION.SDK_INT >= 21) {
+                    transportMode.setImageDrawable(context.getDrawable(R.drawable.bicycle));
+                }else{
+                    transportMode.setImageDrawable(context.getResources().getDrawable(R.drawable.bicycle));
+                }
                 break;
             case SmartCalendarTransportMode.DRIVING:
-                imageLoader.displayImage(fileDirectory + "car.png", transportMode);
+                if(Build.VERSION.SDK_INT >= 21) {
+                    transportMode.setImageDrawable(context.getDrawable(R.drawable.bicycle));
+                }else{
+                    transportMode.setImageDrawable(context.getResources().getDrawable(R.drawable.bicycle));
+                }
                 break;
             case SmartCalendarTransportMode.TRANSIT:
-                imageLoader.displayImage(fileDirectory + "transit.png", transportMode);
+                if(Build.VERSION.SDK_INT >= 21) {
+                    transportMode.setImageDrawable(context.getDrawable(R.drawable.walking));
+                }else{
+                    transportMode.setImageDrawable(context.getResources().getDrawable(R.drawable.walking));
+                }
                 break;
             case SmartCalendarTransportMode.WALKING:
             default:
-                imageLoader.displayImage(fileDirectory + "walking.png", transportMode);
+                if(Build.VERSION.SDK_INT >= 21) {
+                    transportMode.setImageDrawable(context.getDrawable(R.drawable.walking));
+                }else{
+                    transportMode.setImageDrawable(context.getResources().getDrawable(R.drawable.walking));
+                }
                 break;
         }
         return view;

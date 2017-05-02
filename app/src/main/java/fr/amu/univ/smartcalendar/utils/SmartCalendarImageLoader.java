@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class SmartCalendarImageLoader {
     public void displayImage(String filePath, ImageView image){
         imageViews.put(image, filePath);
         Bitmap bitmap = memoryCache.get(filePath);
-
+        Log.d("DEBUG", filePath);
         if(bitmap == null){
             image.setImageBitmap(bitmap);
         }else{

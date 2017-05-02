@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  *
  * Created by j.Katende on 30/04/2017.
@@ -16,10 +18,10 @@ public class SmartCalendarWeatherModel implements Parcelable {
 
     /*@SerializedName("sys")
     private SmartCalendarWeatherParamsModel system_params;
-* /
-    @SerializedName("weather")
-    private SmartCalendarWeatherInfoModel weather_info;
 */
+    @SerializedName("weather")
+    private List<SmartCalendarWeatherDetailModel> weathers;
+
     @SerializedName("main")
     private SmartCalendarWeatherDataModel data;
 
@@ -52,7 +54,7 @@ public class SmartCalendarWeatherModel implements Parcelable {
 
     protected SmartCalendarWeatherModel(Parcel in){
         location = in.readParcelable(SmartCalendarWeatherLocationModel.class.getClassLoader());
-        //weather_info = in.readParcelable(SmartCalendarWeatherInfoModel.class.getClassLoader());
+        weathers = in.readArrayList(SmartCalendarWeatherDetailModel.class.getClassLoader());
         data = in.readParcelable(SmartCalendarWeatherDataModel.class.getClassLoader());
         city_name = in.readString();
         code = in.readInt();
@@ -82,10 +84,14 @@ public class SmartCalendarWeatherModel implements Parcelable {
 
     public void setCode(int c){ this.code = c; }
 
+    public List<SmartCalendarWeatherDetailModel> getWeathers(){ return this.weathers; }
+
+    public void setWeathers(List<SmartCalendarWeatherDetailModel> w){ this.weathers = w;}
+
     @Override
     public void writeToParcel(Parcel dest, int flags){
         dest.writeParcelable(location, flags);
-        //dest.writeParcelable(weather_info, flags);
+        dest.writeTypedList(weathers);
         dest.writeParcelable(data, flags);
         dest.writeString(city_name);
         dest.writeInt(code);

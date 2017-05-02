@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,8 +24,10 @@ import fr.amu.univ.smartcalendar.plugins.direction.constant.SmartCalendarTranspo
 import fr.amu.univ.smartcalendar.plugins.direction.models.SmartCalendarDirectionModel;
 import fr.amu.univ.smartcalendar.plugins.weather.SmartCalendarWeather;
 import fr.amu.univ.smartcalendar.plugins.weather.api.SmartCalendarWeatherCallBack;
+import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
 import fr.amu.univ.smartcalendar.plugins.weather.models.SmartCalendarWeatherModel;
 import fr.amu.univ.smartcalendar.ui.extension.SmartCalendarListView;
+import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
 
 
 /**
@@ -112,6 +115,10 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
 
             TextView activity_day_temp = (TextView)findViewById(R.id.smart_calendar_weather_temperature);
             activity_day_temp.setText(String.valueOf(weather.getData().getMinTemperature()));
+
+            SmartCalendarImageLoader imageLoader = new SmartCalendarImageLoader(ViewEventActivity.this);
+            String weatherIconPath = SmartCalendarWeatherUrl.WEATHER_API_ICON_ROOT_URL + weather.getWeathers().get(0).getIcon() + ".png";
+            imageLoader.displayImage(weatherIconPath, (ImageView)findViewById(R.id.smart_calendar_weather_app_photo));
         }
         /*Thread th = new Thread() {
             @Override
