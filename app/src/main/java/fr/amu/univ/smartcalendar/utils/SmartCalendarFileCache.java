@@ -15,7 +15,7 @@ public class SmartCalendarFileCache {
 
     public SmartCalendarFileCache(Context context){
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            this.cache_directory = new File(Environment.getExternalStorageDirectory(), "sc_list");
+            this.cache_directory = new File(Environment.getExternalStorageDirectory(), "sc_data");
         }else{
             this.cache_directory = context.getCacheDir();
         }

@@ -34,15 +34,15 @@
             />
     </LinearLayout>
     <ImageButton
-            android:id="@+id/smart_calendar_traffic_jam_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="60dp"
-            android:minHeight="60dp"
-            android:background="@drawable/image_bg"
-            android:src="@drawable/car"
-            android:layout_margin="4dp"
-            android:layout_alignParentEnd="true"
+        android:id="@+id/smart_calendar_traffic_jam_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:background="@drawable/image_bg"
+        android:src="@drawable/car"
+        android:layout_margin="4dp"
+        android:layout_alignParentEnd="true"
         />
 
 </RelativeLayout>

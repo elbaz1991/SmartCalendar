@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -37,6 +38,8 @@ public class SmartCalendarImageLoader {
 
     private final int REQUIRED_SIZE = 70;
 
+    private Context context;
+
     private final int stubId = R.drawable.smart_calendar_no_image;
     SmartCalendarMemoryCache memoryCache = new SmartCalendarMemoryCache();
     SmartCalendarFileCache fileCache;
@@ -44,15 +47,18 @@ public class SmartCalendarImageLoader {
     ExecutorService executorService;
 
     public SmartCalendarImageLoader(Context context){
+        this.context = context;
         fileCache = new SmartCalendarFileCache(context);
         executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     }
 
     public void displayImage(String filePath, ImageView image){
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+
         imageViews.put(image, filePath);
-        Bitmap bitmap = memoryCache.get(filePath);
-        Log.d("DEBUG", filePath);
-        if(bitmap == null){
+        Bitmap bitmap = memoryCache.get(fileName);
+
+        if(bitmap != null){
             image.setImageBitmap(bitmap);
         }else{
             queueImage(image, filePath);
@@ -66,11 +72,24 @@ public class SmartCalendarImageLoader {
     }
 
     private Bitmap getBitMap(String filePath){
-        File file = fileCache.getFileByPath(filePath);
-        Bitmap fileBitMap = decodeFileToBitMap(file);
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+        File cacheFile;
+        if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
+            cacheFile = new File(Environment.getExternalStorageDirectory(), "sc_data" + File.pathSeparator + "images");
+        }else{
+            cacheFile = context.getCacheDir();
+        }
+
+        if(!cacheFile.exists()){ cacheFile.mkdirs(); }
+
+        cacheFile = new File(cacheFile.getAbsolutePath() + File.pathSeparator + fileName);
+
+        //File file = fileCache.getFileByPath(filePath);
+        //if(!file.exists()){ Log.d("DEBUG", "file exist"); }
+        Bitmap fileBitMap = decodeFileToBitMap(cacheFile);
 
         //retrieve from memory cache
-        if(fileBitMap != null){ return fileBitMap; }
+        //if(fileBitMap != null){ return fileBitMap; } */
 
         //otherwise get data from online
         try{
@@ -79,10 +98,10 @@ public class SmartCalendarImageLoader {
             connection.setConnectTimeout(CONNEXION_TIME_OUT);
             connection.setReadTimeout(DATA_READ_TIME_OUT);
             InputStream inputStream = connection.getInputStream();
-            OutputStream outputStream = new FileOutputStream(file);
+            OutputStream outputStream = new FileOutputStream(cacheFile);
             SmartCalendarUtils.copyStream(inputStream, outputStream);
             outputStream.close();
-            fileBitMap = decodeFileToBitMap(file);
+            fileBitMap = decodeFileToBitMap(cacheFile);
             return fileBitMap;
         }catch(Exception ignored){
             ignored.printStackTrace();
@@ -158,7 +177,7 @@ public class SmartCalendarImageLoader {
         public void run(){
             if(isImageViewReusable(imageToLoad)){ return; }
 
-            Bitmap bitmap = getBitMap(imageToLoad.getFilePath());
+            Bitmap bitmap = getBitMap(imageToLoad.getFilePath()); Log.d("DEBUG", "thread running " + imageToLoad.getFilePath());
             memoryCache.put(imageToLoad.getFilePath(), bitmap);
 
             if(isImageViewReusable(imageToLoad)){ return; }

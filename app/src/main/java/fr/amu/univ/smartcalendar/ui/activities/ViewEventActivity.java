@@ -1,8 +1,14 @@
 package fr.amu.univ.smartcalendar.ui.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,8 +32,8 @@ import fr.amu.univ.smartcalendar.plugins.weather.SmartCalendarWeather;
 import fr.amu.univ.smartcalendar.plugins.weather.api.SmartCalendarWeatherCallBack;
 import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
 import fr.amu.univ.smartcalendar.plugins.weather.models.SmartCalendarWeatherModel;
-import fr.amu.univ.smartcalendar.ui.extension.SmartCalendarListView;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
+import fr.amu.univ.smartcalendar.utils.SmartCalendarUtils;
 
 
 /**
@@ -36,6 +42,7 @@ import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
  */
 
 public class ViewEventActivity extends Activity implements SmartCalendarGoogleDirectionCallback, SmartCalendarWeatherCallBack {
+    private Object lock = new Object();
     private static final String DIRECTION_API_SERVER_KEY = "AIzaSyBoxT_Im1KWhogP6ERKp5Skw2tTUIP_xRk";
 
     private static final String WEATHER_API_SERVER_KEY = "c631d13091388de7ae8c89007238da75";
@@ -62,7 +69,7 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
     public static final String TRAFFIC_KEY_DURATION = "duration";
     public static final String TRAFFIC_KEY_DISTANCE = "distance";
     public static final String TRAFFIC_KEY_ROUTE = "route";
-    public static final String TRAFFIC_KEY_ = "";
+    public static final String TRAFFIC_KEY_ROUTE_POINTS = "route_points";
     public static final String TRAFFIC_KEY_TRANSPORT_MODE = "transport_mode";
 
 
@@ -74,18 +81,75 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_event);
-        activity_title = (TextView)findViewById(R.id.smart_calendar_view_activity_title);
+        if(!SmartCalendarUtils.isConnected(ViewEventActivity.this)){
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewEventActivity.this);
+            dialogBuilder.setMessage(getResources().getString(R.string.smart_calendar_unable_to_use_internet_message))
+                    .setPositiveButton(getResources().getString(R.string.smart_calendar_fire_label), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent networkSettings = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivityForResult(networkSettings, 0);
+                            /*int ind = 0;
+                            while(true){
+                                if(SmartCalendarUtils.isConnected(ViewEventActivity.this)){
+                                    Log.d("DEBUG", "je suis connecter ");
+                                    break;
+                                }
+                                synchronized (this) {
+                                    try {
+                                        getApplicationContext().wait(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    this.notify();
+                                }
 
-        smartCalendarDirectionItems = (LinearLayout)findViewById(R.id.smart_calendar_direction_items);
+ind++; Log.d("DEBUG", "context. coction" + ind);
+                            }
+                            Log.d("DEBUG", "context. coction" + ind);
+                            stopService(networkSettings);
+                            //context.startActivity(((Activity) context).getIntent());
+                        //}
+                        //context.*/
+                        }
+                    }).setNegativeButton(getResources().getString(R.string.smart_calendar_cancel_label), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            dialogBuilder.create().show();
+            //SmartCalendarUtils.showConnexionAlert(ViewEventActivity.this);
+        }else {
+            renderActivity();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        Log.d("DEBUG", "relance de la fonction" + requestCode + " " + resultCode);
+        if(requestCode == 0){
+            WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if(!wifiManager.isWifiEnabled()){
+                renderActivity();
+            }
+        }
+    }
+
+    public void renderActivity(){
+        Log.d("DEBUG", "relance de la fonction");
+        setContentView(R.layout.activity_view_event);
+        activity_title = (TextView) findViewById(R.id.smart_calendar_view_activity_title);
+
+        smartCalendarDirectionItems = (LinearLayout) findViewById(R.id.smart_calendar_direction_items);
 
         paramsReader = getIntent();
-        smartCalendarActivity = (SmartCalendarActivityModel)paramsReader.getParcelableExtra("calendar_activity");
-        if(smartCalendarActivity != null){
+        smartCalendarActivity = (SmartCalendarActivityModel) paramsReader.getParcelableExtra("calendar_activity");
+        if (smartCalendarActivity != null) {
             destinationAddress = new SmartCalendarAddressModel(this, smartCalendarActivity.getAddressId());
-            //renderWeather();
-            //renderDirectionProposal();
-        }else {
+            renderWeather();
+            renderDirectionProposal();
+        } else {
             //We can't display unavailable activities their for redirect user to the activity creation page.
         }
         renderWeather();
@@ -99,7 +163,7 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
     @Override
     public void onWeatherSuccess(final SmartCalendarWeatherModel weather, String data){
         if(weather.getCode() == 200) {
-            activity_title.setText("transmission reussie " + weather.getCityName());
+            //activity_title.setText("transmission reussie " + weather.getCityName());
             /*activityTemperature = (TextView)findViewById(R.id.smart_calendar_weather_activity_day_of_week);
             activityDayOfWeek.setText(String.valueOf(weather.getData().getTemperature()));
             activityDayOfWeek.setText(String.valueOf(weather.getData().getMaxTemperature()));
@@ -114,7 +178,7 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
             activity_min_temp.setText(String.valueOf(weather.getData().getMinTemperature()));
 
             TextView activity_day_temp = (TextView)findViewById(R.id.smart_calendar_weather_temperature);
-            activity_day_temp.setText(String.valueOf(weather.getData().getMinTemperature()));
+            activity_day_temp.setText(String.valueOf(weather.getData().getTemperature()));
 
             SmartCalendarImageLoader imageLoader = new SmartCalendarImageLoader(ViewEventActivity.this);
             String weatherIconPath = SmartCalendarWeatherUrl.WEATHER_API_ICON_ROOT_URL + weather.getWeathers().get(0).getIcon() + ".png";
@@ -143,8 +207,22 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
 
     @Override
     public void onWeatherFailure(Throwable ignored){
-        Log.d("DEBUG", ignored.getMessage());
-        activity_title.setText("error appened");
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(getResources().getString(R.string.smart_calendar_weather_retrieve_error_message))
+                .setPositiveButton(getResources().getString(R.string.smart_calendar_fire_label), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //PROCCESS
+                    }
+                }).setNegativeButton(getResources().getString(R.string.smart_calendar_cancel_label), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 
@@ -164,6 +242,7 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
             for(int index = 0; index < direction.getRouteList().size(); index++){
                 map = new HashMap<>();
                 map.put(TRAFFIC_KEY_ROUTE, " " + (index + 1));
+                map.put(TRAFFIC_KEY_ROUTE_POINTS, direction.getRouteList().get(index).getOverviewPolyline().getRawPointList());
                 //map.put(TRAFFIC_KEY_DISTANCE, direction.getRouteList().get(index).getOverviewPolyline());
                 map.put(TRAFFIC_KEY_DURATION, direction.getRouteList().get(index).getLegList().get(0).getDuration().getText());
                 map.put(TRAFFIC_KEY_DISTANCE, direction.getRouteList().get(index).getLegList().get(0).getDistance().getText());

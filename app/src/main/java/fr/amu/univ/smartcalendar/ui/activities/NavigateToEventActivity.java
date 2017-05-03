@@ -1,7 +1,10 @@
 package fr.amu.univ.smartcalendar.ui.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,8 +12,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.List;
 
 import fr.amu.univ.smartcalendar.R;
+import fr.amu.univ.smartcalendar.plugins.direction.models.SmartCalendarDirectionRouteModel;
 
 /**
  *
@@ -19,11 +26,16 @@ import fr.amu.univ.smartcalendar.R;
 
 public class NavigateToEventActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap navigationMap;
+    private List<LatLng> navigationRoute;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigate_to_event);
+        Intent data = getIntent();
+        String polyline = data.getStringExtra(ViewEventActivity.TRAFFIC_KEY_ROUTE_POINTS);
+        Log.d("DEBUG", "polyline" + polyline);
+        navigationRoute = SmartCalendarDirectionRouteModel.decodePolyLine(polyline);
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.smart_calendar_navigation_map);
         mapFragment.getMapAsync(this);
     }
@@ -31,8 +43,9 @@ public class NavigateToEventActivity extends FragmentActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         navigationMap = googleMap;
-        LatLng sidney = new LatLng(-35, 151);
-        navigationMap.addMarker(new MarkerOptions().position(sidney).title("Sydney"));
-        navigationMap.moveCamera(CameraUpdateFactory.newLatLng(sidney));
+        navigationMap.addMarker(new MarkerOptions().position(navigationRoute.get(0)).title(""));
+        navigationMap.addMarker(new MarkerOptions().position(navigationRoute.get(navigationRoute.size() - 1)).title(""));
+        navigationMap.moveCamera(CameraUpdateFactory.newLatLngZoom(navigationRoute.get(0), 12.0f));
+        navigationMap.addPolyline(new PolylineOptions().addAll(navigationRoute).width(4).color(Color.RED));
     }
 }
