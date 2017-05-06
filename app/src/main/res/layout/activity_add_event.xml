@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorAccent"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,7 +41,7 @@
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
-                    android:drawableRight="@drawable/ic_black_save"
+                    android:drawableRight="@drawable/ic_save_white"
                     android:gravity="center_vertical"
                     android:layout_marginRight="10dp"
                     android:layout_alignParentRight="true"/>
@@ -53,5 +53,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_add_event" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AutoCompleteTextView" />
 
 </android.support.design.widget.CoordinatorLayout>

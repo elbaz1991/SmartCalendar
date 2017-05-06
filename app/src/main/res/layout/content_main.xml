@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="fr.amu.univ.smartcalendar.MainActivity"
+    tools:context="fr.amu.univ.smartcalendar.ui.activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+<!-- app:compactCalendarTargetHeight="250dp" -->
 
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,21 +18,27 @@
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:layout_height="230dp"
-        app:compactCalendarTargetHeight="250dp"
-        app:compactCalendarTextSize="12sp"
-        app:compactCalendarBackgroundColor="#619afd"
-        app:compactCalendarTextColor="#ffffff"
+        app:compactCalendarTargetHeight="230dp"
+        app:compactCalendarTextSize="13sp"
+        app:compactCalendarBackgroundColor="#fcfcfc"
+        app:compactCalendarTextColor="#000000"
         app:compactCalendarCurrentSelectedDayBackgroundColor="#88eaab"
         app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
-        app:compactCalendarMultiEventIndicatorColor="#fff"
+        app:compactCalendarMultiEventIndicatorColor="#eb0404"
+        app:compactCalendarDisplayOtherMonthDays="true"
+        app:compactCalendarOtherMonthDaysTextColor="#FFADADAD"
+
         />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/eventList_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical">
-
+            android:layout_weight="1"
+            >
         </android.support.v7.widget.RecyclerView>
+
+
        
 </LinearLayout>

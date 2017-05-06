@@ -1,13 +1,14 @@
-package fr.amu.univ.smartcalendar;
+package fr.amu.univ.smartcalendar.ui.activities;
 
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,40 +18,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.android.gms.analytics.ecommerce.Product;
 
-import java.text.SimpleDateFormat;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import fr.amu.univ.smartcalendar.model.dao.DatabaseHelper;
+import fr.amu.univ.smartcalendar.model.bean.ColorEvent;
+import fr.amu.univ.smartcalendar.outils.DateFormater;
+import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
-import fr.amu.univ.smartcalendar.model.entity.Evenement;
-import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
-
+import fr.amu.univ.smartcalendar.ui.activities.adapters.EventCellAdapter;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    CompactCalendarView compactCalendarView;
-    private SimpleDateFormat dateForrmatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.FRANCE);
+    protected CompactCalendarView compactCalendarView;
+
 
     /* Assosiation des views Xml -> Java*/
     private ImageView ui_up_down_imgView;// TextView afficher / cacher -> calendar
     private RecyclerView ui_eventListRecyclerView;
 
+    private long selectedDateDepart;
+    /* */
+    private EventCellAdapter adapterRecyclerView;
 
-    // Base de donnée
-    //DatabaseHelper sqliteDB;
+    //protected List<Evenement> eventList = new ArrayList<>();
+
+    private EvenementDAO evenementDAO = new EvenementDAO(this);
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,35 +69,45 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(dateForrmatMonth.format(new Date())); //
+        getSupportActionBar().setTitle(DateFormater.dateFormatMonth(calendar.getTime())); //
         /* Création du calendrier */
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
-        compactCalendarView.setLocale(TimeZone.getDefault(),Locale.FRANCE);
+        //compactCalendarView.setLocale(TimeZone.getDefault(),Locale.FRANCE);
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            SimpleDateFormat dateForrma = new SimpleDateFormat("dd - MMMM - yyyy", Locale.FRANCE);
+
             @Override
             public void onDayClick(Date dateClicked) {
-                Toast.makeText(getApplicationContext(),dateForrma.format(dateClicked).toString(),Toast.LENGTH_SHORT).show();
+                selectedDateDepart = dateClicked.getTime();
+                LinearLayoutManager layoutManager = (LinearLayoutManager) ui_eventListRecyclerView
+                        .getLayoutManager();
+                //layoutManager.scrollToPosition()
+                //loadDayEvents(dateClicked);
+
+                //Toast.makeText(getApplicationContext(),DateFormater.dateFormat(dateClicked),Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                getSupportActionBar().setTitle(dateForrmatMonth.format(firstDayOfNewMonth));
+                getSupportActionBar().setTitle(DateFormater.dateFormatMonth(firstDayOfNewMonth));
+                loadMonthEvents();
+                //Toast.makeText(getApplicationContext(),String.valueOf(DateFormater.getMonthFromTime(firstDayOfNewMonth)),Toast.LENGTH_SHORT).show();
+                //loadMonthEvents();
             }
+
         });
 
 
-        final Intent openAddEvent = new Intent(this,AddEventActivity.class);
+        final Intent openAddEvent = new Intent(this, AddEventActivity.class);
         FloatingActionButton addEventBtn = (FloatingActionButton) findViewById(R.id.addEventBtn);
         addEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (selectedDateDepart != 0)
+                    openAddEvent.putExtra("selectedDateDepart", selectedDateDepart);
                 startActivity(openAddEvent);
             }
         });
-
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,11 +124,25 @@ public class MainActivity extends AppCompatActivity
         ui_up_down_imgView = (ImageView) findViewById(R.id.up_down_calendar);
         ui_eventListRecyclerView = (RecyclerView) findViewById(R.id.eventList_recycler_view);
         ui_eventListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ui_eventListRecyclerView.setAdapter(new EventListAdapter());
 
+        adapterRecyclerView = new EventCellAdapter(this);
+        ui_eventListRecyclerView.setAdapter(adapterRecyclerView);
+
+
+        /*
+        ui_eventListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                loadMonthEvents();
+            }
+        });
+        */
 
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -184,65 +217,73 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadMonthEvents();
+        //loadMonthEvents();
+        //loadAllEvents();
+        //compactCalendarView.showCalendarWithAnimation();
+
+    }
 
 
-    /**
-     * Created by elbaz on 19/04/2017.
-     * Cette classe est chargé de l'adaptation des données pour qu'ils soient
-     * compatible avec le RecyclerView(La vue qui affiche la liste des évènement
-     */
 
-    class EventListAdapter extends RecyclerView.Adapter<EventHolder>{
-
-        private List<Evenement> eventList;
-
-        public EventListAdapter(){
-            eventList = new ArrayList<>();
-            eventList.add(new Evenement("walo","helooooooo !"));
-            eventList.add(new Evenement("Yes","Holaaaaa !"));
-            eventList.add(new Evenement("No","Amigoooooo !"));
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public EventHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View cell = LayoutInflater.from(MainActivity.this).inflate(R.layout.event_cell,parent,false);
-            EventHolder holder = new EventHolder(cell);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(EventHolder holder, int position) {
-            holder.layoutForEvent(eventList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            int itemCount = 0;
-            if(eventList != null){
-                itemCount = eventList.size();
+    private void loadAllEvents(){
+        List<Long> allEventsDate = evenementDAO.findAllEventsDates();
+        /*
+        AutoCompleteTextView a = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        a.setTok
+        */
+        if(allEventsDate != null) {
+            compactCalendarView.removeAllEvents();
+            for (Long dateEvent : allEventsDate) {
+                compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
             }
-            return itemCount;
         }
+        List<Long> distinctEventsDate = evenementDAO.findDistinctEventsDates();
+        adapterRecyclerView.setmDataSet(distinctEventsDate);
     }
 
-    /**
-     * Created by elbaz on 19/04/2017.
-     * Holder c'est un objet qui Gère la vue qui est visible dans la liste des évènement
-     */
-
-    class EventHolder extends RecyclerView.ViewHolder {
-
-        private final TextView ui_eventTitle;
-
-        public EventHolder(View cell) {
-            super(cell);
-            ui_eventTitle = (TextView) cell.findViewById(R.id.eventTitle);
+    private void loadMonthEvents(){
+        List<Long> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
+        if(allEventsDate != null) {
+            compactCalendarView.removeAllEvents();
+            for (Long dateEvent : allEventsDate) {
+                compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
+            }
         }
-
-        public void layoutForEvent(Evenement event){
-            ui_eventTitle.setText(event.getTitre());
-        }
+        List<Long> distinctEventsDate = evenementDAO.findDistinctMonthEvents(compactCalendarView.getFirstDayOfCurrentMonth());
+        adapterRecyclerView.setmDataSet(distinctEventsDate);
     }
+
+    /*
+    private void loadMonthEvents(){
+         eventList = evenementDAO.findByDateEvent(compactCalendarView.getFirstDayOfCurrentMonth());
+                if(eventList != null) {
+                    compactCalendarView.removeAllEvents();
+                    for (Evenement event : eventList) {
+                        compactCalendarView.addEvent(new Event(Color.RED, event.getDateDebut(), event.getTitre()));
+                    }
+                }
+        adapterRecyclerView.setmDataSet(eventList);
+    }
+    */
+
+
+    /*
+    private void loadDayEvents(Date date){
+        eventList = evenementDAO.findByDateEvent(date);
+        if(eventList != null) {
+            compactCalendarView.removeAllEvents();
+            for (Evenement event : eventList) {
+                compactCalendarView.addEvent(new Event(Color.RED, event.getDateDebut(), event.getTitre()));
+            }
+        }
+        adapterRecyclerView.setmDataSet(eventList);
+    }
+    */
+
+
 }
 

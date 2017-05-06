@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<colors>
+
+    <color>
+        <name>Bleu marin</name>
+        <code>#008fd1</code>
+    </color>
+
+    <color>
+        <name>Bleu canard</name>
+        <code>#00757f</code>
+    </color>
+
+    <color>
+        <name>Rouge carmin</name>
+        <code>#ab0b2d</code>
+    </color>
+    <color>
+        <name>Geranium</name>
+        <code>#e3001b</code>
+    </color>
+
+    <color>
+        <name>Orange</name>
+        <code>#ec7316</code>
+    </color>
+    <color>
+        <name>Cerise</name>
+        <code>#82092a</code>
+    </color>
+
+    <color>
+        <name>Fushia</name>
+        <code>#e2017b</code>
+    </color>
+
+    <color>
+        <name>Vieux rose</name>
+        <code>#ee8fa5</code>
+    </color>
+
+
+
+    <color>
+        <name>Gris chaud</name>
+        <code>#877a74</code>
+    </color>
+
+    <color>
+        <name>Vert printemps</name>
+        <code>#9dc224</code>
+    </color>
+
+    <color>
+        <name>Vert chartreuse</name>
+        <code>#c5d87f</code>
+    </color>
+
+    <color>
+        <name>Jaune shine</name>
+        <code>#ffe524</code>
+    </color>
+
+    <!--
+    <color>
+        <name>Turquoise</name>
+        <code>#24adbd</code>
+    </color>
+
+    <color>
+        <name>Chocolat</name>
+        <code>#82483c</code>
+    </color>
+
+    <color>
+        <name>Cappuccino</name>
+        <code>#cb8b5b</code>
+    </color>
+
+
+    <color>
+        <name>Cimill or</name>
+        <code>#d9ab00</code>
+    </color>
+-->
+</colors>
