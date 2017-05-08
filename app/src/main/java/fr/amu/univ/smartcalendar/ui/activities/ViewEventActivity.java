@@ -2,7 +2,6 @@ package fr.amu.univ.smartcalendar.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -22,8 +20,8 @@ import java.util.HashMap;
 
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.adapters.SmartCalendarNavigationAdapter;
-import fr.amu.univ.smartcalendar.models.SmartCalendarActivityModel;
-import fr.amu.univ.smartcalendar.models.SmartCalendarAddressModel;
+import fr.amu.univ.smartcalendar.model.entity.SmartCalendarActivityModel;
+import fr.amu.univ.smartcalendar.model.entity.SmartCalendarAddressModel;
 import fr.amu.univ.smartcalendar.plugins.direction.SmartCalendarDirection;
 import fr.amu.univ.smartcalendar.plugins.direction.api.SmartCalendarGoogleDirectionCallback;
 import fr.amu.univ.smartcalendar.plugins.direction.constant.SmartCalendarTransportMode;
@@ -146,7 +144,7 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
         paramsReader = getIntent();
         smartCalendarActivity = (SmartCalendarActivityModel) paramsReader.getParcelableExtra("calendar_activity");
         if (smartCalendarActivity != null) {
-            destinationAddress = new SmartCalendarAddressModel(this, smartCalendarActivity.getAddressId());
+            //destinationAddress = new SmartCalendarAddressModel(this, smartCalendarActivity.getAddressId());
             renderWeather();
             renderDirectionProposal();
         } else {

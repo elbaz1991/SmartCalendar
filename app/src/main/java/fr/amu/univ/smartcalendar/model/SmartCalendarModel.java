@@ -1,4 +1,4 @@
-package fr.amu.univ.smartcalendar.models;
+package fr.amu.univ.smartcalendar.model;
 
 import android.content.Context;
 import android.content.ContextWrapper;

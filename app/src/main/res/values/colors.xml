@@ -4,4 +4,18 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWhiteSmoke">#F5F5F5</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightBlue">#87CEEB</color>
+
+
+    <color name="colorCellBack">#fdfdfd</color>
+    <color name="colorTextCell">#4d4d4d</color>
+
+
+    <color name="colorParDefaut">#0000FF</color>
+    <color name="colorRouge">#FF0000</color>
+    <color name="colorVert">#008000</color>
+    <color name="colorJaune">#FFFF00</color>
+    <color name="colorOrange">#FF4500</color>
 </resources>

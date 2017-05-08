@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
 
 import fr.amu.univ.smartcalendar.R;
 
@@ -22,6 +23,7 @@ import fr.amu.univ.smartcalendar.R;
 
 public class SmartCalendarUtils {
     private static final int BUFFER_SIZE = 1024;
+
 
     public static void copyStream(InputStream inputStream, OutputStream out){
         try{
@@ -65,5 +67,9 @@ public class SmartCalendarUtils {
                     }
                 });
         dialogBuilder.create().show();
+    }
+
+    public static String getAddressFromCoordinates(double latitute, double longitude){
+        return "";
     }
 }

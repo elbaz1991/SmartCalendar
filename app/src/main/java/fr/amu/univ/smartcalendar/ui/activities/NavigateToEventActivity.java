@@ -34,7 +34,7 @@ public class NavigateToEventActivity extends FragmentActivity implements OnMapRe
         setContentView(R.layout.navigate_to_event);
         Intent data = getIntent();
         String polyline = data.getStringExtra(ViewEventActivity.TRAFFIC_KEY_ROUTE_POINTS);
-        Log.d("DEBUG", "polyline" + polyline);
+
         navigationRoute = SmartCalendarDirectionRouteModel.decodePolyLine(polyline);
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.smart_calendar_navigation_map);
         mapFragment.getMapAsync(this);

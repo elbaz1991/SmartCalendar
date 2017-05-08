@@ -23,7 +23,15 @@
     <string name="smart_calendar_itinerary_label" >Itinéraire</string>
     <string name="smart_calendar_duration_label" >Durée</string>
     <string name="smart_calendar_distance_label" >Distance</string>
-    <string name="smart_calendar_" ></string>
+    <string name="smart_calendar_all_day" >Journée Entière</string>
+    <!--string name="smart_calendar_" ></string>
+    <string name="smart_calendar_" ></string-->
+    <string name="smart_calendar_destination_place_label" >Destination</string>
+    <string name="smart_calendar_departure_place_label" >Lieu de départ</string>
+    <string name="smart_calendar_hour" ></string>
+    <string name="smart_calendar_date_label" >Date</string>
+    <string name="smart_calendar_event_title" >Titre</string>
+    <string name="smart_calendar_event_description" >Description</string>
     <string name="smart_calendar_activity_view_event" >Detail</string>
     <string name="smart_calendar_navigation_title" >Navigation</string>
     <string name="smart_calendar_unable_to_use_internet_message" >Veillez verifier la connexion internet pour continuer.</string>

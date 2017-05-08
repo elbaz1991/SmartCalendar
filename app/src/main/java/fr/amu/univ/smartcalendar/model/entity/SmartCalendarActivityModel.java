@@ -1,4 +1,4 @@
-package fr.amu.univ.smartcalendar.models;
+package fr.amu.univ.smartcalendar.model.entity;
 
 import android.content.Context;
 
@@ -6,13 +6,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.amu.univ.smartcalendar.model.SmartCalendarModel;
+
 /**
  *
  * Created by j.Katende on 18/04/2017.
  */
 
-public class SmartCalendarActivityModel extends SmartCalendarModel{
-    private int activity_id;
+public class SmartCalendarActivityModel extends SmartCalendarModel {
+    /*private int activity_id;
 
     private String title;
 
@@ -20,9 +22,7 @@ public class SmartCalendarActivityModel extends SmartCalendarModel{
 
     private int address_id;
 
-    private boolean remind_guests;
 
-    private List<Integer> guests;
 
     private Date date_add;
 
@@ -30,7 +30,7 @@ public class SmartCalendarActivityModel extends SmartCalendarModel{
 
     private Date start_date;
 
-    private Date end_date;
+    private Date end_date; */
 
     public SmartCalendarActivityModel(Context base){ this(base, 0); }
 
@@ -39,7 +39,7 @@ public class SmartCalendarActivityModel extends SmartCalendarModel{
         // TODO: 18/04/2017  implements constructor
     }
 
-    public int getActivityId(){
+    /*public int getActivityId(){
         return activity_id;
     }
 
@@ -85,5 +85,5 @@ public class SmartCalendarActivityModel extends SmartCalendarModel{
 
     public boolean update(){ return true; }
 
-    public boolean delete(){ return true; }
+    public boolean delete(){ return true; } */
 }

@@ -1,13 +1,15 @@
-package fr.amu.univ.smartcalendar.models;
+package fr.amu.univ.smartcalendar.model.entity;
 
 import android.content.Context;
+
+import fr.amu.univ.smartcalendar.model.SmartCalendarModel;
 
 /**
  *
  * Created by j.Katende on 18/04/2017.
  */
 
-public class SmartCalendarAddressModel extends SmartCalendarModel {
+public class SmartCalendarAddressModel{
     private int address_id;
 
     private String address_label;
@@ -16,10 +18,16 @@ public class SmartCalendarAddressModel extends SmartCalendarModel {
 
     private float latitude;
 
+    private int event_id;
+
+    private int origin;
+
+    private int destination;
+
     public SmartCalendarAddressModel(Context base){ this(base, 0); }
 
     public SmartCalendarAddressModel(Context context, int addressId){
-        super(context);
+
         // TODO: 18/04/2017 build constructor
     }
 
@@ -45,9 +53,17 @@ public class SmartCalendarAddressModel extends SmartCalendarModel {
 
     public void setLatitude(float addressLatitude){ this.latitude = addressLatitude; }
 
-    public boolean add(){ return true; }
+    public int getEventId(){ return this.event_id; }
 
-    public boolean update(){ return true; }
+    public void setEventId(int eventId){
+        this.event_id = eventId;
+    }
 
-    public boolean delete(){ return true; }
+    public boolean isOrigin(){ return (origin == 1); }
+
+    public void setOrigin(int o){ this.origin = 1; }
+
+    public void setDestination(int d){ this.destination = d; }
+
+    public boolean isDestination(){ return  (destination == 1); }
 }
