@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
@@ -71,5 +73,9 @@ public class SmartCalendarUtils {
 
     public static String getAddressFromCoordinates(double latitute, double longitude){
         return "";
+    }
+
+    public static LatLng getGeoLocationByLabel(String addressLabel){
+        return new LatLng(20, 25);
     }
 }

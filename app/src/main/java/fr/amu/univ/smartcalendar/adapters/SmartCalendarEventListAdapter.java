@@ -21,28 +21,34 @@ import fr.amu.univ.smartcalendar.model.entity.SmartCalendarEventModel;
  */
 
 public class SmartCalendarEventListAdapter extends RecyclerView.Adapter<SmartCalendarEventItemViewHolder>{
-    private List<Long> calendarDataSet;
+    private List<SmartCalendarEventModel> calendarDataSet;
     private LayoutInflater viewInflater;
     private static List<String> li;
+    private Context context;
 
-    public List<SmartCalendarEventModel> items;
+    //public List<SmartCalendarEventModel> items;
 
-    public SmartCalendarEventListAdapter(Context context){ //List<SmartCalendarEventModel> eventList){
+    public SmartCalendarEventListAdapter(Context context){
+        this(context, new ArrayList<SmartCalendarEventModel>());
+    }
+
+    public SmartCalendarEventListAdapter(Context context, List<SmartCalendarEventModel> eventList){
+        this.context = context;
         viewInflater = LayoutInflater.from(context);
-        li = new ArrayList<>();
-        items = new ArrayList<>(); //Collections.synchronizedList()//new eventList;
+        calendarDataSet = eventList;
+        Collections.synchronizedList(calendarDataSet);
     }
 
     @Override
     public SmartCalendarEventItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_cell, parent, true);
+        View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_cell_item, parent, false);
         cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-        SmartCalendarEventItemViewHolder holder = new SmartCalendarEventItemViewHolder(cell);
+        SmartCalendarEventItemViewHolder holder = new SmartCalendarEventItemViewHolder(cell, this.context);
         return holder;
     }
 
@@ -57,15 +63,18 @@ public class SmartCalendarEventListAdapter extends RecyclerView.Adapter<SmartCal
 
     @Override
     public void onBindViewHolder(SmartCalendarEventItemViewHolder holder, int position){
-        //holder.layoutForEvent(items.get(position));
+        if(calendarDataSet.size() > 0 && calendarDataSet.size() > position) {
+            holder.layoutForEvent(calendarDataSet.get(position));
+        }
     }
 
-    public void setCalendarDataSet(List<Long> dataSet){
+    public void setCalendarDataSet(List<SmartCalendarEventModel> dataSet){
         if(dataSet == null){
             this.calendarDataSet = new ArrayList<>();
         }else{
             this.calendarDataSet = dataSet;
         }
+        Log.d("DEBUG", " la taille du nuveau tableau " + calendarDataSet.size());
         notifyDataSetChanged();
     }
 }

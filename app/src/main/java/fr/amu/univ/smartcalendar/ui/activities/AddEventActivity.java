@@ -21,6 +21,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import fr.amu.univ.smartcalendar.R;
 import java.text.SimpleDateFormat;
@@ -260,6 +261,22 @@ public class AddEventActivity extends AppCompatActivity {
         event.setDescription(desc);
         event.setDateDebut(dateDebut.getTime());
         //event.setDateFin(dateFin.getTime());
+        /**
+         * setting departure address information
+         */
+        departureAddress.setAddressLabel(ui_lieuDepart.getText().toString());
+        LatLng location = SmartCalendarUtils.getGeoLocationByLabel(departureAddress.getAddressLabel());
+        departureAddress.setLatitude(location.latitude);
+        departureAddress.setLongitude(location.longitude);
+        departureAddress.setOrigin(1);
+        departureAddress.setDestination(0);
+
+        destinationAddress.setAddressLabel(smartCalendarDestinationLocation.getText().toString());
+        location = SmartCalendarUtils.getGeoLocationByLabel(destinationAddress.getAddressLabel());
+        destinationAddress.setLatitude(location.latitude);
+        destinationAddress.setLongitude(location.longitude);
+        destinationAddress.setOrigin(0);
+        destinationAddress.setDestination(1);
         boolean result = true;
 
         if(event.getEventId() > 0){
@@ -267,17 +284,19 @@ public class AddEventActivity extends AppCompatActivity {
             result &= addressDAO.update(departureAddress);
             result &= addressDAO.update(destinationAddress);
             result &= participantDAO.update(participants);
+
         }else{
             /* create new data **/
-
             event.setEventId((int)evenementDAO.insert(event));
-            Log.d("DEBUG", "running  " + event.getEventId());
-            /*departureAddress.setEventId(event.getEventId());
+            departureAddress.setEventId(event.getEventId());
             departureAddress.setAddressId((int)addressDAO.insert(departureAddress));
+            evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DEPART, departureAddress.getAddressId());
+
             destinationAddress.setEventId(event.getEventId());
             destinationAddress.setAddressId((int)addressDAO.insert(destinationAddress));
-            participants.setEventId(event.getEventId());
-            participantDAO.insert(participants);*/
+            evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DESTINATION, destinationAddress.getAddressId());
+            /*participants.setEventId(event.getEventId());
+            result &= participantDAO.insert(participants);*/
         }
 
         return result;

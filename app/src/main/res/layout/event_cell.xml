@@ -1,77 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.activities.MainActivity"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="4dp"
-    android:layout_margin="0dp"
-    app:cardCornerRadius="0dp"
-    app:cardBackgroundColor="@color/colorCellBack"
-    >
-
-    <LinearLayout
+    android:layout_height="wrap_content" >
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/smart_calendar_event_cell_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/eventMonth"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/colorAccent"
-            android:visibility="gone"
-            android:textSize="22dp"
-            android:gravity="center"
-            />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/eventNumDay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="#7c7c7c"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="5dp"
-                />
-            <TextView
-                android:id="@+id/eventNameDay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-
-                android:layout_marginTop="21dp"
-                android:layout_marginLeft="5dp"
-                />
-
-            <!--
-            <LinearLayout
-                android:id="@+id/contentTest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorPrimary">
-            </LinearLayout>
-            -->
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/eventListContent_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="3dp">
-
-            </android.support.v7.widget.RecyclerView>
-
-        </FrameLayout>
-
-
-    </LinearLayout>
-
-
-</android.support.v7.widget.CardView>
+        android:scrollbars="vertical" />
+</RelativeLayout>

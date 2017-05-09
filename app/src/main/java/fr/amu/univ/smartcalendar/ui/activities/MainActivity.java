@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -26,10 +28,10 @@ import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
-
+/*
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory; */
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,7 +48,7 @@ import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
     CompactCalendarView compactCalendarView;
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.FRANCE);
 
@@ -98,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ui_eventListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapterRecyclerView = new SmartCalendarEventListAdapter(this);
         ui_eventListRecyclerView.setAdapter(adapterRecyclerView);
-
+        ui_eventListRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(ui_eventListRecyclerView.getContext(), );
         addEventListeners();
     }
 
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(openAddEvent);
             }
         });
-/*
+
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd - MMMM - yyyy", Locale.FRANCE);
             @Override
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportActionBar().setTitle(dateFormatMonth.format(firstDayOfNewMonth));
                 loadMonthEvents();
             }
-        }); */
+        });
     }
 
     @Override
@@ -210,30 +213,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadAllEvents(){
-        List<Long> allEventsDate = evenementDAO.findAllEventsDates();
+        //todo List<Long> allEventsDate = evenementDAO.findAllEventsDates();
 
-        if(allEventsDate != null){
+        /*if(allEventsDate != null){
             compactCalendarView.removeAllEvents();
             for (Long dateEvent : allEventsDate){
                 compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
             }
         }
         List<Long> distinctEventsDate = evenementDAO.findDistinctEventsDates();
-        adapterRecyclerView.setCalendarDataSet(distinctEventsDate);
+        adapterRecyclerView.setCalendarDataSet(distinctEventsDate); */
     }
 
     private void loadMonthEvents(){
-        /*List<Long> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
-        if(allEventsDate != null) {
+        List<SmartCalendarEventModel> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
+
+        if(allEventsDate.size() > 0) {
             compactCalendarView.removeAllEvents();
-            for (Long dateEvent : allEventsDate) {
-                compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
+            for (SmartCalendarEventModel eventData : allEventsDate) {
+                //compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
             }
         }
-        List<Long> distinctEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
-        adapterRecyclerView.setCalendarDataSet(distinctEventsDate);*/
+        List<SmartCalendarEventModel> distinctEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
+        adapterRecyclerView.setCalendarDataSet(distinctEventsDate);
     }
-
 
     /**
      * Created by elbaz on 19/04/2017.

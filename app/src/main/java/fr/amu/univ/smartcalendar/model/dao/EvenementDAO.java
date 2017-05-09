@@ -3,6 +3,7 @@ package fr.amu.univ.smartcalendar.model.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,6 +81,15 @@ public class EvenementDAO extends DatabaseDAO{
         return true;
     }
 
+    public void updateIntField(int eventId, String field, int value){
+        ContentValues values = new ContentValues();
+        values.put(field, value);
+        String selection = field + " = ?";
+        open();
+        int result = db.update(TABLE_NAME, values, selection, new String[]{String.valueOf(eventId)} );
+        close();
+    }
+
     /**
      *@return renvoi tout les évènements
      */
@@ -111,7 +121,7 @@ public class EvenementDAO extends DatabaseDAO{
     /***
      *
      */
-    public List<SmartCalendarEventModel> findByDateEvent(Context context, Date date){
+    public List<SmartCalendarEventModel> findEventsByDate(Context context, Date date){
         String dateString = SmartCalendarDateFormat.getDateFormatYearMonthDay(date);
         String queryFindByMonth = "SELECT * FROM " + EvenementDAO.TABLE_NAME +
                 " WHERE '"+dateString+"'"+
@@ -204,20 +214,21 @@ public class EvenementDAO extends DatabaseDAO{
      * @return cette methode retourne la liste des dates(long) des évènements avec doublant
      * pour afficher les évènements sur le calendrier (plusieurs évèenemnt par jour)
      */
-    public List<Long> findAllEventsByMonth(Date date){
+    public List<SmartCalendarEventModel> findAllEventsByMonth(Date date){
         String month = SmartCalendarDateFormat.getDateFormatYearMonthDay(date);
 
-        String query = "SELECT strftime('%s',distinctDate) FROM " +
+        /*String query = "SELECT strftime('%s',distinctDate) FROM " +
                 "(SELECT date(datetime(dateDebut, 'unixepoch', 'localtime')) AS distinctDate " +
                 "FROM Evenement " +
                 /*"WHERE " +
                 "(SELECT strftime('%m',(SELECT datetime(dateDebut, 'unixepoch', 'localtime'))))" +
-                " = (SELECT strftime('%m','"+month+"'))" + */
-                "ORDER BY dateDebut ASC)";
+                " = (SELECT strftime('%m','"+month+"'))" + * /
+                "ORDER BY dateDebut ASC)"; */
+        String query = "SELECT * FROM " + TABLE_NAME ;
 
 
 
-        List<Long> li = new ArrayList<>();
+        List<SmartCalendarEventModel> eventItems = new ArrayList<>();
         open();
         Cursor cursor = db.rawQuery(query,null);
         // si la table est vide
@@ -226,24 +237,35 @@ public class EvenementDAO extends DatabaseDAO{
 
         boolean dejaTraite = false;
         long dernierDateTraiter = -1;
-        while (cursor.moveToNext()){
-            long dateDebutSecondes = cursor.getLong(0);
-            long dateDebutMilliSecondes = dateDebutSecondes * 1000; // *1000 pour convertir le resultat en millisecondes
+        if(cursor != null) {
+            SmartCalendarEventModel event;
+            cursor.moveToFirst();
+            do{
+                event = new SmartCalendarEventModel(this.context);
+                event.setEventId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+                event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)) + event.getEventId());
+                event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
+                event.setOriginAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DEPART)));
+                event.setDestinationAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DESTINATION)));
+                event.setDateDebut(cursor.getLong(cursor.getColumnIndex(COL_DATE_DEBUT)));
+                event.setDateFin(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
+            /*long dateDebutSeconds = cursor.getLong(0);
+            long dateDebutMilliSeconds = dateDebutSeconds * 1000; // *1000 pour convertir le resultat en millisecondes
 
-            li.add((dateDebutMilliSecondes));
+            li.add((dateDebutMilliSeconds));
 
-            if(dernierDateTraiter != dateDebutMilliSecondes) {
+            if(dernierDateTraiter != dateDebutMilliSeconds) {
                 dejaTraite = false;
             }
 
             if(!dejaTraite) {
-                List<Integer> list = getAllEventDuree(dateDebutSecondes);
+                List<Integer> list = getAllEventDuree(dateDebutSeconds);
                 if(list != null) {
                     for (int i = 0; i < list.size(); i++) {
                         //Log.e("Duuuree", String.valueOf(list.get(i)));
                         for (int j = 1; j <= list.get(i); j++) {
                             Calendar c = Calendar.getInstance();
-                            c.setTimeInMillis(dateDebutMilliSecondes);
+                            c.setTimeInMillis(dateDebutMilliSeconds);
                             c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + j);
                             li.add(c.getTimeInMillis());
                         }
@@ -251,9 +273,11 @@ public class EvenementDAO extends DatabaseDAO{
                     dejaTraite = true;
                 }
             }
-            dernierDateTraiter = dateDebutMilliSecondes;
+                dernierDateTraiter = dateDebutMilliSeconds;*/
+                eventItems.add(event);
+            }while(cursor.moveToNext());
         }
-        return li;
+        return eventItems;
     }
 
     public List<Integer> getAllEventDuree(long dateDebut){

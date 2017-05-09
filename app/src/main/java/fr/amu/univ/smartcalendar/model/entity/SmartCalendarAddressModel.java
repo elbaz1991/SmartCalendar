@@ -14,9 +14,9 @@ public class SmartCalendarAddressModel{
 
     private String address_label;
 
-    private float longitude;
+    private double longitude;
 
-    private float latitude;
+    private double latitude;
 
     private int event_id;
 
@@ -37,11 +37,11 @@ public class SmartCalendarAddressModel{
         return this.address_label;
     }
 
-    public float getLongitude(){
+    public double getLongitude(){
         return this.longitude;
     }
 
-    public float getLatitude(){
+    public double getLatitude(){
         return this.latitude;
     }
 
@@ -49,9 +49,9 @@ public class SmartCalendarAddressModel{
 
     public void setAddressLabel(String addressLabel){ this.address_label = addressLabel; }
 
-    public void setLongitude(float addressLongitude){ this.longitude = addressLongitude; }
+    public void setLongitude(double addressLongitude){ this.longitude = addressLongitude; }
 
-    public void setLatitude(float addressLatitude){ this.latitude = addressLatitude; }
+    public void setLatitude(double addressLatitude){ this.latitude = addressLatitude; }
 
     public int getEventId(){ return this.event_id; }
 

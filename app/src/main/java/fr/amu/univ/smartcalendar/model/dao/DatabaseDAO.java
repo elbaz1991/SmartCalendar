@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
  */
 
 public abstract class DatabaseDAO {
+    protected Context context;
 
     // Version de la base de donnée
     protected final static int VERSION = 1;
@@ -20,6 +21,7 @@ public abstract class DatabaseDAO {
 
     public DatabaseDAO(Context pContext) {
         this.handler = new DatabaseHelper(pContext, NOM, null, VERSION);
+        this.context = pContext;
     }
 
     public SQLiteDatabase open() {
