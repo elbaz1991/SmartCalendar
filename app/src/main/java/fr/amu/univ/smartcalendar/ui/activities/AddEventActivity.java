@@ -110,6 +110,7 @@ public class AddEventActivity extends AppCompatActivity {
         //========== */
         Intent eventData = getIntent();
         int eventId = Integer.parseInt(eventData.getStringExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID));
+
         if(eventId > 0){
             event = new SmartCalendarEventModel(this, eventId);
             departureAddress = new SmartCalendarAddressModel(this, event.getOriginAddressId());

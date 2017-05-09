@@ -3,9 +3,11 @@ package fr.amu.univ.smartcalendar.utils;
 import android.util.Log;
 
 import java.sql.Date;
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 /**
+ *
  * Created by j.Katende on 09/05/2017.
  */
 
@@ -33,5 +35,11 @@ public class SmartCalendarDateUtils {
         hour = calendar.get(Calendar.HOUR);
         minute = calendar.get(Calendar.MINUTE);
         second = calendar.get(Calendar.SECOND);
+    }
+
+    public String getDateAsString(){
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        return day + "-" + months[month] + "-" + year;
     }
 }

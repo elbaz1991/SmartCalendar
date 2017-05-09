@@ -1,6 +1,7 @@
 package fr.amu.univ.smartcalendar.adapters.holders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,9 @@ import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
 import fr.amu.univ.smartcalendar.model.entity.SmartCalendarEventModel;
 
 import fr.amu.univ.smartcalendar.R;
+import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
+import fr.amu.univ.smartcalendar.ui.activities.ViewEventActivity;
+import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarDateFormat;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarDateUtils;
 
@@ -52,6 +56,7 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
         smartCalendarEventCellStartDateTime = (TextView)cell.findViewById(R.id.smart_calendar_event_cell_start_date_time);
         smartCalendarEventCellToWrapper = (TextView)cell.findViewById(R.id.smart_calendar_event_cell_to_wrapper);
         smartCalendarEventCellEdit = (ImageButton)cell.findViewById(R.id.smart_calendar_event_cell_edit);
+
         /*/linearLayout = (LinearLayout) cell.findViewById(R.id.contentTest);
         ui_eventContentRecyclerView = (RecyclerView) cell.findViewById(R.id.eventListContent_recyclerView);
         ui_eventContentRecyclerView.setLayoutManager(new LinearLayoutManager(cell.getContext()));
@@ -60,7 +65,7 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
         evenementDAO = new EvenementDAO(cell.getContext()); */
     }
 
-    public void layoutForEvent(SmartCalendarEventModel event){
+    public void layoutForEvent(final SmartCalendarEventModel event){
         smartCalendarEventCellTitle.setText(event.getTitre());
         SmartCalendarDateUtils eventDate = new SmartCalendarDateUtils(event.getDateDebut());
         smartCalendarEventCellStartDateDay.setText(String.valueOf(eventDate.day));
@@ -72,9 +77,20 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
         eventDate = new SmartCalendarDateUtils(event.getDateFin());
         smartCalendarEventCellToWrapper.setText(
                 context.getResources().getString(R.string.activity_to_label) + " " +
+                        eventDate.getDateAsString() + " " +
                         context.getResources().getString(R.string.activity_at_label) + " " +
                         String.valueOf(eventDate.hour) + " : " + String.valueOf(eventDate.minute)
         );
+        smartCalendarEventCellEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(context, AddEventActivity.class);
+                editIntent.setAction(Intent.ACTION_SEND);
+                editIntent.putExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID, String.valueOf(event.getEventId()));
+
+                context.startActivity(editIntent);
+            }
+        });
         /*String currentMonth = SmartCalendarDateFormat.dateFormatMonth(new Date(dateEvent));
         Log.e("Exec","Execute : " + SmartCalendarDateFormat.getEventNumDay(new Date(dateEvent))+" s : "+ SmartCalendarDateFormat.getDateFormatYearMonthDay(new Date(dateEvent)));
 

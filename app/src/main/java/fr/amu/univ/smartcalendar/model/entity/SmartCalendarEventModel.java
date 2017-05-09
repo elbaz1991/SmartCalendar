@@ -1,7 +1,5 @@
 package fr.amu.univ.smartcalendar.model.entity;
 
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -38,6 +36,8 @@ public class SmartCalendarEventModel {
 
     private Context context = null;
 
+    public SmartCalendarEventModel(){}
+
     public SmartCalendarEventModel(Context base){
         this(base, 0);
     }
@@ -45,6 +45,20 @@ public class SmartCalendarEventModel {
 
     public SmartCalendarEventModel(Context base, int eventId) {
         context = base;
+
+        if(eventId > 0){
+            EvenementDAO evenementDAO = new EvenementDAO(context);
+            SmartCalendarEventModel eventModel = evenementDAO.getEventById(eventId);
+            if(eventModel != null) {
+                this.event_id = eventModel.getEventId();
+                this.titre = eventModel.getTitre();
+                this.description = eventModel.getDescription();
+                this.dateDebut = eventModel.getDateDebut();
+                this.dateFin = eventModel.getDateFin();
+                this.destination_address_id = eventModel.getDestinationAddressId();
+                this.origin_address_id = eventModel.getOriginAddressId();
+            }
+        }
     }
 
     public SmartCalendarEventModel(String titre, String description){

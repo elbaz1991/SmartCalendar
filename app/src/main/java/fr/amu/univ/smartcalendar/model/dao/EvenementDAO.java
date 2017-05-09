@@ -241,7 +241,7 @@ public class EvenementDAO extends DatabaseDAO{
             SmartCalendarEventModel event;
             cursor.moveToFirst();
             do{
-                event = new SmartCalendarEventModel(this.context);
+                event = new SmartCalendarEventModel();
                 event.setEventId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
                 event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)) + event.getEventId());
                 event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
@@ -299,6 +299,27 @@ public class EvenementDAO extends DatabaseDAO{
             li.add(cursor.getInt(0));
         }
         return li;
+    }
+
+    public SmartCalendarEventModel getEventById(int id){
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = " + id;
+
+        open();
+        Cursor cursor = db.rawQuery(query, null);
+        close();
+        if(cursor != null){
+            cursor.moveToFirst();
+            SmartCalendarEventModel event = new SmartCalendarEventModel();
+            event.setEventId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+            event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)) + event.getEventId());
+            event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
+            event.setOriginAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DEPART)));
+            event.setDestinationAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DESTINATION)));
+            event.setDateDebut(cursor.getLong(cursor.getColumnIndex(COL_DATE_DEBUT)));
+            event.setDateFin(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
+            return event;
+        }
+        return null;
     }
 
     public static Cursor getEventList(Context context){

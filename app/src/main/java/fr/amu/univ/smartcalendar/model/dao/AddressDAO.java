@@ -2,6 +2,7 @@ package fr.amu.univ.smartcalendar.model.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import fr.amu.univ.smartcalendar.model.entity.SmartCalendarAddressModel;
 
@@ -55,7 +56,27 @@ public class AddressDAO extends DatabaseDAO{
         return result;
     }
 
-    public boolean update(SmartCalendarAddressModel addres){ return true; }
+    public boolean update(SmartCalendarAddressModel address){ return true; }
+
+    public SmartCalendarAddressModel getAddressById(int addressId){
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = " + addressId;
+
+        open();
+        Cursor cursor = db.rawQuery(query, null);
+        close();
+
+        if(cursor != null) {
+            cursor.moveToFirst();
+            SmartCalendarAddressModel addressModel = new SmartCalendarAddressModel();
+            addressModel.setAddressId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+            addressModel.setAddressLabel(cursor.getString(cursor.getColumnIndex(COL_ALIAS)));
+            addressModel.setLongitude(cursor.getDouble(cursor.getColumnIndex(COL_LONGITUDE)));
+            addressModel.setLatitude(cursor.getDouble(cursor.getColumnIndex(COL_LATITUDE)));
+            addressModel.setEventId(cursor.getInt(cursor.getColumnIndex(COL_EVENT_ID)));
+            addressModel.setcursor.
+        }
+        return null;
+    }
 
     public boolean delete(){
         return true;

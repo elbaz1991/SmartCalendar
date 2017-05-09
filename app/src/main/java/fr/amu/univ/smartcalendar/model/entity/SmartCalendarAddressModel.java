@@ -3,6 +3,7 @@ package fr.amu.univ.smartcalendar.model.entity;
 import android.content.Context;
 
 import fr.amu.univ.smartcalendar.model.SmartCalendarModel;
+import fr.amu.univ.smartcalendar.model.dao.AddressDAO;
 
 /**
  *
@@ -24,11 +25,30 @@ public class SmartCalendarAddressModel{
 
     private int destination;
 
+    private Context context = null;
+
+    public SmartCalendarAddressModel(){
+
+    }
+
     public SmartCalendarAddressModel(Context base){ this(base, 0); }
 
     public SmartCalendarAddressModel(Context context, int addressId){
+        this.context = context;
 
-        // TODO: 18/04/2017 build constructor
+        if(addressId > 0){
+            AddressDAO addressDAO = new AddressDAO(context);
+            SmartCalendarAddressModel address = addressDAO.getAddressById(addressId);
+            if(address != null) {
+                this.address_id = address.getEventId();
+                this.address_label = address.getAddressLabel();
+                this.latitude = address.getLatitude();
+                this.longitude = address.getLongitude();
+                this.event_id = address.getEventId();
+                this.origin = address.isOrigin() ? 1 : 0;
+                this.destination = address.isDestination() ? 1 : 0;
+            }
+        }
     }
 
     public int getAddressId(){ return this.address_id; }

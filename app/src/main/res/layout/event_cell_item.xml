@@ -5,26 +5,38 @@
     android:orientation="vertical"
     app:cardBackgroundColor="@color/colorCellBack"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="70dp">
     <LinearLayout
         android:id="@+id/smart_calendar_event_cell_start_date_wrapper"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
         android:orientation="vertical"
         android:background="@drawable/image_bg"
         android:textAlignment="center"
         >
         <TextView
             android:id="@+id/smart_calendar_event_cell_start_date_day"
-            android:textSize="22sp"
+            android:textSize="21sp"
+            android:text="22"
             android:textAlignment="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="0dp"
+            android:background="@android:color/darker_gray"
+            />
         <TextView
             android:id="@+id/smart_calendar_event_cell_start_date_month"
-            android:textSize="22sp"
-            android:layout_marginTop="5dp"
+            android:textSize="21sp"
+            android:text="10"
+            android:layout_marginTop="1dp"
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -34,20 +46,27 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="16sp"
         android:ellipsize="marquee"
+        android:text="vbfb kfgvb,v,nb n,"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/smart_calendar_event_cell_start_date_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/smart_calendar_event_cell_start_date_time"
+        android:text="vbfb kfgvb,v,nb n,"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/smart_calendar_event_cell_start_date_wrapper"
-        android:layout_marginTop="18sp"
+        android:layout_marginTop="23dp"
         />
     <TextView
         android:id="@+id/smart_calendar_event_cell_to_wrapper"
         android:layout_toEndOf="@+id/smart_calendar_event_cell_start_date_wrapper"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
+        android:text="vbfb kfgvb,v,nb n,"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ImageButton
