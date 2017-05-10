@@ -159,6 +159,44 @@ public class EvenementDAO extends DatabaseDAO{
     }
 
 
+    /**
+     * @author elbaz
+     * @param idEvent
+     *@return renvoi l'évènement par id
+     */
+    public Evenement findById(int idEvent) {
+
+        Evenement event;
+        String query = "SELECT * FROM "+TABLE_NAME+" WHERE id="+idEvent;
+        Calendar d = Calendar.getInstance();
+        open();
+        Cursor cursor = db.rawQuery(query,null);
+        // si la table est vide
+        if(cursor.getCount() == 0)
+            return null;
+        else {
+            cursor.moveToFirst();
+            event = new Evenement();
+            event.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+            event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)));
+            event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
+            d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_DEBUT)));
+            event.setDateDebut(d);
+
+            d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
+            event.setDateFin(d);
+            event.setAdresseDepart(adresseDAO.findByAdresseId(cursor.getString(cursor.getColumnIndex(COL_ADRESSE_DEPART))));
+            event.setAdresseRdv(adresseDAO.findByAdresseId(cursor.getString(cursor.getColumnIndex(COL_ADRESSE_RDV))));
+            event.setDateFin(d);
+            event.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLEUR)));
+
+        }
+
+        close();
+        return event;
+    }
+
+
 
 
 
@@ -548,4 +586,5 @@ public class EvenementDAO extends DatabaseDAO{
         }
         return 0;
     }
+
 }
