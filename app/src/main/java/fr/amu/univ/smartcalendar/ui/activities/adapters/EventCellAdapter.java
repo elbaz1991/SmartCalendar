@@ -1,22 +1,31 @@
 package fr.amu.univ.smartcalendar.ui.activities.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.amu.univ.smartcalendar.outils.DateFormater;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
+import fr.amu.univ.smartcalendar.ui.activities.MainActivity;
 
 
 /**
@@ -27,11 +36,16 @@ import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
 public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.EventHolder>{
     private List<Long> mDataSet;
     private LayoutInflater mInflater;
-    private static List<String> li;
+    private static Map<String,Long> mapUniqueMonth;
+    private EvenementDAO evenementDAO;
+    private MainActivity mainActivity;
 
     public EventCellAdapter(Context context){
         mInflater = LayoutInflater.from(context);
-        li = new ArrayList<>();
+        mapUniqueMonth = new HashMap<>();
+        evenementDAO = new EvenementDAO(context);
+        mainActivity = (MainActivity) context;
+        loadMap();
     }
 
     @Override
@@ -73,6 +87,8 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
         notifyDataSetChanged();
     }
 
+
+
     /**
      * Created by elbaz on 19/04/2017.
      * Holder c'est un objet qui Gère la vue qui est visible dans la liste des évènement
@@ -86,11 +102,10 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
         private RecyclerView ui_eventContentRecyclerView;
         private EventCellContentAdapter adapterContentRecyclerView;
 
-        private LinearLayout linearLayout;
 
-        private String lastDisplayedMonth ="";
 
-        private EvenementDAO evenementDAO;
+
+
 
 
         public EventHolder(View cell) {
@@ -98,62 +113,127 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
             ui_cell_eventNumDay = (TextView) cell.findViewById(R.id.eventNumDay);
             ui_cell_eventNameDay = (TextView) cell.findViewById(R.id.eventNameDay);
             ui_cell_eventMonth = (TextView) cell.findViewById(R.id.eventMonth);
-            //linearLayout = (LinearLayout) cell.findViewById(R.id.contentTest);
             ui_eventContentRecyclerView = (RecyclerView) cell.findViewById(R.id.eventListContent_recyclerView);
             ui_eventContentRecyclerView.setLayoutManager(new LinearLayoutManager(cell.getContext()));
+            cell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(),view.getTag().toString(),Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
-            evenementDAO = new EvenementDAO(cell.getContext());
         }
 
-        public void layoutForEvent(EventHolder holder,Long dateEvent){
-            String currentMonth = DateFormater.dateFormatMonth(new Date(dateEvent));
+        public void layoutForEvent(final EventHolder holder, Long dateEvent){
+            Log.e("Execute","Yeeeeeeeeeeeees");
+            String currentMonth = DateFormater.dateFormatMonthYear(new Date(dateEvent));
+
+            holder.itemView.setTag(dateEvent);
 
 
-            /*
-            if(!existDeja(li,currentMonth)){
-                //Log.e("ExecuteExist","Yeeeeeeeeeeees");
-                li.add(currentMonth);
-                ui_cell_eventMonth.setVisibility(View.VISIBLE);
-                ui_cell_eventMonth.setText(currentMonth + " : "+li.size());
+            if(mapUniqueMonth != null && mapUniqueMonth.size() == 0)
+                loadMap();
+
+            if(mapUniqueMonth.get(currentMonth).toString().equals(holder.itemView.getTag().toString())){
+                setBackgroundMonth(new Date(dateEvent).getMonth() + 1,holder.ui_cell_eventMonth);
+                holder.ui_cell_eventMonth.setText(currentMonth);
+                holder.ui_cell_eventMonth.setVisibility(View.VISIBLE);
+            }else{
+                holder.ui_cell_eventMonth.setBackground(null);
+                holder.ui_cell_eventMonth.setText(null);
+                holder.ui_cell_eventMonth.setVisibility(View.GONE);
             }
-            */
-
-            Log.e("Exec","Execute : " + DateFormater.getEventNumDay(new Date(dateEvent))+" s : "+DateFormater.dateFormatYyMmDd(new Date(dateEvent)));
 
 
             holder.ui_cell_eventNumDay.setText(DateFormater.getEventNumDay(new Date(dateEvent)));
             holder.ui_cell_eventNameDay.setText(DateFormater.getEventNameDay(new Date(dateEvent)));
-            holder.adapterContentRecyclerView = new EventCellContentAdapter(holder.itemView.getContext());
+            if(holder.ui_cell_eventNameDay.getText().equals("Dim.")){
+                int color = holder.itemView.getResources().getColor(R.color.colorWeekCell);
+                holder.ui_cell_eventNumDay.setTextColor(color);
+                holder.ui_cell_eventNameDay.setTextColor(color);
+            }else{
+                int color = holder.itemView.getResources().getColor(R.color.colorTextDate);
+                holder.ui_cell_eventNumDay.setTextColor(color);
+                holder.ui_cell_eventNameDay.setTextColor(color);
+            }
+
+            holder.adapterContentRecyclerView = new EventCellContentAdapter(holder.itemView.getContext(),EventCellAdapter.this);
             holder.ui_eventContentRecyclerView.setAdapter(adapterContentRecyclerView);
             holder.adapterContentRecyclerView.setmDataSet(evenementDAO.findByDateEvent(new Date(dateEvent)));
             holder.ui_eventContentRecyclerView.getAdapter().notifyDataSetChanged();
 
+
+
             /*
-            List<Evenement> listEvent = evenementDAO.findByDateEvent(new Date(dateEvent));
-           for (Evenement e : listEvent){
-                TextView ext = new TextView(holder.itemView.getContext());
-                ext.setText("Test");
-                ext.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-                ext.setWidth(20);
-                ext.setHeight(20);
-
-            linearLayout.addView(ext);
-                //linearLayout.setVisibility(View.INVISIBLE);
-                //linearLayout.addView(new TextView(holder.itemView.getContext()));
-            }
+            holder.ui_deleteLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(holder.itemView.getContext(),"Yees",Toast.LENGTH_SHORT).show();
+                }
+            });
             */
-            //notifyDataSetChanged();
+
         }
 
-        public boolean existDeja(List<String> li,String value){
-            for(int i=0;i<li.size();i++){
-                if(li.get(i).equals(value))
-                    return true;
-            }
-            return false;
-        }
+
+
+
 }
+
+
+
+
+    public static Map<String, Long> getMapUniqueMonth() {
+        return mapUniqueMonth;
+    }
+
+
+    private void setBackgroundMonth(int month, TextView textView){
+        switch (month){
+            case 1 : textView.setBackgroundResource(R.drawable.bg_month_01);break;
+            case 2 : textView.setBackgroundResource(R.drawable.bg_month_02);break;
+            case 3 : textView.setBackgroundResource(R.drawable.bg_month_03);break;
+            case 4 : textView.setBackgroundResource(R.drawable.bg_month_04);break;
+            case 5 : textView.setBackgroundResource(R.drawable.bg_month_05);break;
+            case 6 : textView.setBackgroundResource(R.drawable.bg_month_06);break;
+            case 7 : textView.setBackgroundResource(R.drawable.bg_month_07);break;
+            case 8 : textView.setBackgroundResource(R.drawable.bg_month_08);break;
+            case 9 : textView.setBackgroundResource(R.drawable.bg_month_09);break;
+            case 10 : textView.setBackgroundResource(R.drawable.bg_month_10);break;
+            case 11 : textView.setBackgroundResource(R.drawable.bg_month_11);break;
+            case 12 : textView.setBackgroundResource(R.drawable.bg_month_12);break;
+        }
+    }
+
+    private void loadMap(){
+        mapUniqueMonth.clear();
+        List<Long> li = evenementDAO.findDistinctAllEvents();
+        Calendar c = Calendar.getInstance();
+        String currentMonth;
+
+        if(li != null) {
+            for (Long dateEvent : li) {
+                c.setTimeInMillis(dateEvent);
+                currentMonth = DateFormater.dateFormatMonthYear(c.getTime());
+                // ajouter les dates de debut de chaque mois
+                if (!mapUniqueMonth.containsKey(currentMonth)) {
+                    mapUniqueMonth.put(currentMonth, dateEvent);
+                }
+            }
+        }
+    }
+
+    public void deleteEvent(int idEvent){
+        evenementDAO.delete(idEvent);
+        mainActivity.loadAllEvents();
+        loadMap();
+        /*mDataSet = evenementDAO.findDistinctAllEvents();
+        loadMap();
+        notifyDataSetChanged();
+        */
+    }
+
 
 
 }

@@ -1,6 +1,7 @@
 package fr.amu.univ.smartcalendar.ui.activities.adapters;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -35,9 +36,9 @@ public class EventViewAdapter{
         String currentDateStr = DateFormater.dateFormatYyMmDd(new Date(currentDate));
 
         if(getDifferenceDays(dateDebut,dateFin) > 0){
-            long durreRdv = getDifferenceDays(dateDebut,dateFin) + 1;
-            long difference = durreRdv - getDifferenceDays(currentDate,dateFin) ;
-
+            long durreRdv = getDifferenceDays(dateDebut,dateFin) +1;
+            Log.e("Date",": "+currentDate);
+            long difference = getDifferenceDays(dateDebut,currentDate) +1 ;
             titreResult = titreResult + " (jour "+difference +"/"+ durreRdv +")";
         }
 
@@ -75,21 +76,6 @@ public class EventViewAdapter{
                     DateFormater.dateFormatddMM(new Date(dateFin)) /*+" à "+ DateFormater.heureFormat(new Date(dateFin))*/;
         }
 
-
-
-
-
-        /*else{
-            duree += DateFormater.dateFormatddMM(new Date(dateFin)) +" à "+ DateFormater.heureFormat(new Date(dateFin));
-        }
-
-        else{
-            duree = DateFormater.dateFormatddMM(new Date(dateDebut)) +" à "+ DateFormater.heureFormat(new Date(dateDebut)) + " - " +
-                    DateFormater.dateFormatddMM(new Date(dateFin)) +" à "+ DateFormater.heureFormat(new Date(dateFin));
-
-        }
-
-        */
 
         return duree;
     }

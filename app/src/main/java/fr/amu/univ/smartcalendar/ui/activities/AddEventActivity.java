@@ -21,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -69,19 +70,19 @@ public class AddEventActivity extends AppCompatActivity {
     private TextView ui_heureFin;
     private EditText ui_lieuDepart;
     private EditText ui_lieuRdv;
-    //
+    // Toubi
     private TextView ui_ajouterRappel;
+    private TextView textRappel1, textRappel2;
+    private TextView ui_modifierCouleur;
     private LinearLayout ui_layoutRappel;
     private Spinner ui_spinnerMoyenTrans;
-    private TextView ui_modifierCouleur;
-    private  static  int nombreDeNotification = 0;
     private Switch ui_touteLaJournee;
 
-    private static int rappelEnMinute1 , rappelEnMinute2;
-    private static TextView textRappel1, textRappel2;
-    private static String moyenDeTransport;
-    private static int couleurEvenement;
-
+    private String moyenDeTransport;
+    private int couleurEvenement;
+    private int nombreDeNotification = 0;
+    private int rappelEnMinute1 , rappelEnMinute2;
+    // Fin Toubi
 
 
 
@@ -179,6 +180,7 @@ public class AddEventActivity extends AppCompatActivity {
         final Time debutDeJour = Time.valueOf("00:00:00");
         final Time finDeJour = Time.valueOf("23:59:00");
         ui_touteLaJournee.setOnCheckedChangeListener(touteLaJourneeListener());
+        couleurEvenement = R.color.colorParDefaut;
         // fin de test
 
 
@@ -233,11 +235,12 @@ public class AddEventActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                int jour = calendar.get(Calendar.DAY_OF_MONTH);
-                int mois = calendar.get(Calendar.MONTH);
-                int annee = calendar.get(Calendar.YEAR);
+
 
                 if(view == ui_dateDebut){
+                    int jour = dateDebut.get(Calendar.DAY_OF_MONTH);
+                    int mois = dateDebut.get(Calendar.MONTH);
+                    int annee = dateDebut.get(Calendar.YEAR);
                     DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int annee, int mois, int jours) {
@@ -246,9 +249,13 @@ public class AddEventActivity extends AppCompatActivity {
                         }
                     }
                     ,annee,mois,jour);
+
                     datePickerDialog.show();
                 }
                 if(view == ui_dateFin){
+                    int jour = dateFin.get(Calendar.DAY_OF_MONTH);
+                    int mois = dateFin.get(Calendar.MONTH);
+                    int annee = dateFin.get(Calendar.YEAR);
                     DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int annee, int mois, int jours) {
@@ -313,15 +320,21 @@ public class AddEventActivity extends AppCompatActivity {
         event.setAdresseDepart(new Adresse(placeDepart));
         event.setAdresseRdv(new Adresse(placeRdv));
         event.setColor(couleurEvenement);
+        event.setRappel1(rappelEnMinute1 * 60);
+        event.setRappel2(rappelEnMinute2 * 60);
+        event.setMoyenneDeTransport(moyenDeTransport);
 
 
         boolean etatEnregistrement = evenementDAO.insert(event);
-        if(placeDepart != null)
-            etatEnregistrement &= adresseDAO.insert(new Adresse(placeDepart));
+        if(etatEnregistrement) {
+            int lastInsertedEventId = evenementDAO.getLastInsertedId();
+            Log.e("Id"," : "+lastInsertedEventId);
+            if (placeDepart != null)
+                etatEnregistrement &= adresseDAO.insert(new Adresse(placeDepart),lastInsertedEventId);
 
-        if(placeRdv != null)
-            etatEnregistrement &= adresseDAO.insert(new Adresse(placeRdv));
-
+            if (placeRdv != null)
+                etatEnregistrement &= adresseDAO.insert(new Adresse(placeRdv),lastInsertedEventId);
+        }
         return etatEnregistrement;
     }
 
@@ -459,6 +472,7 @@ public class AddEventActivity extends AppCompatActivity {
                             }
 
 
+                            /*
                             if(textRappelParam.equals(textRappel1)) {
                                 Toast.makeText(AddEventActivity.this,
                                         String.valueOf(rappelEnMinute1 + "*1"),
@@ -470,6 +484,7 @@ public class AddEventActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
 
                             }
+                            */
 
                             dialog.dismiss();
                         }
@@ -643,17 +658,13 @@ public class AddEventActivity extends AppCompatActivity {
                                                         textRappel2.setText("Avant "+nbrDeMois+" mois" + " et "+ nbrDeSemaines +" semaines");
                                                     }
                                                     break;
-
-
                                             }
-
-
                                         }
 
 
                                         dialog.dismiss();
 
-
+                                        /*
                                         if(textRappelParam.equals(textRappel1)) {
                                             Toast.makeText(AddEventActivity.this,
                                                     String.valueOf(rappelEnMinute1 + "*1"),
@@ -668,6 +679,7 @@ public class AddEventActivity extends AppCompatActivity {
 
 
                                         }
+                                        */
 
 
 
@@ -782,9 +794,10 @@ public class AddEventActivity extends AppCompatActivity {
                                 rappelEnMinute1 = Integer.valueOf(rappelValues[spinner_pos]);
 
 
+                                /*
                                 Toast.makeText(AddEventActivity.this,
                                         String.valueOf(rappelEnMinute1 + "*1*"),
-                                        Toast.LENGTH_SHORT).show();
+                                        Toast.LENGTH_SHORT).show();*/
 
                                 dialog.dismiss();
                             }
@@ -817,9 +830,11 @@ public class AddEventActivity extends AppCompatActivity {
                                 rappelEnMinute2 = Integer.valueOf(rappelValues[spinner_pos]);
 
 
+                                /*
                                 Toast.makeText(AddEventActivity.this,
                                         String.valueOf(rappelEnMinute2 + "*2*"),
                                         Toast.LENGTH_SHORT).show();
+                                        */
 
                                 dialog.dismiss();
                             }
@@ -946,9 +961,11 @@ public class AddEventActivity extends AppCompatActivity {
                                             }
 
                                             dialog.dismiss();
+                                            /*
                                             Toast.makeText(AddEventActivity.this,
                                                     String.valueOf(rappelEnMinute1 + "*1"),
                                                     Toast.LENGTH_SHORT).show();
+                                                    */
                                         }
                                         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                                         textRappel1.setOnClickListener(clickerPourModifier(textRappel1));
@@ -1024,9 +1041,11 @@ public class AddEventActivity extends AppCompatActivity {
                                                 nombreDeNotification = 0;
                                             }
                                             dialog.dismiss();
+                                            /*
                                             Toast.makeText(AddEventActivity.this,
                                                     String.valueOf(rappelEnMinute2+ "*2"),
                                                     Toast.LENGTH_SHORT).show();
+                                                    */
                                         }
                                         nombreDeNotification += 1;
                                         if(textRappel2 != null){
@@ -1088,19 +1107,21 @@ public class AddEventActivity extends AppCompatActivity {
                         moyenDeTransport = "à pieds";
                         break;
                 }
-
+                /*
                 Toast.makeText(AddEventActivity.this,
                         String.valueOf(moyenDeTransport),
                         Toast.LENGTH_SHORT).show();
-
+                */
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 moyenDeTransport = null;
+                /*
                 Toast.makeText(AddEventActivity.this,
                         String.valueOf(moyenDeTransport),
                         Toast.LENGTH_SHORT).show();
+                        */
             }
         };
     }

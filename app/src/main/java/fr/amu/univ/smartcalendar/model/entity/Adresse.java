@@ -8,6 +8,7 @@ import com.google.android.gms.location.places.Place;
 
 public class Adresse {
     private String idAdresse;
+    private int idEvent;
     private String adresse;
     private String nom;
     private double latitude;
@@ -65,5 +66,13 @@ public class Adresse {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getIdEvent() {
+        return idEvent;
+    }
+
+    public void setIdEvent(int idEvent) {
+        this.idEvent = idEvent;
     }
 }

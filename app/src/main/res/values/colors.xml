@@ -8,8 +8,10 @@
     <color name="colorLightBlue">#87CEEB</color>
 
 
-    <color name="colorCellBack">#fdfdfd</color>
-    <color name="colorTextCell">#4d4d4d</color>
+    <color name="colorCellBack">#f7faf9f9</color>
+    <color name="colorTextCell">#313131</color>
+    <color name="colorWeekCell">#baed0707</color>
+    <color name="colorTextDate">#7c7c7c</color>
 
 
     <color name="colorParDefaut">#0000FF</color>

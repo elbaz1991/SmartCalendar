@@ -4,6 +4,7 @@ package fr.amu.univ.smartcalendar.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 
 import fr.amu.univ.smartcalendar.model.bean.ColorEvent;
+import fr.amu.univ.smartcalendar.model.entity.Evenement;
 import fr.amu.univ.smartcalendar.outils.DateFormater;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
@@ -45,7 +48,7 @@ import fr.amu.univ.smartcalendar.ui.activities.adapters.EventCellAdapter;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected CompactCalendarView compactCalendarView;
+    private CompactCalendarView compactCalendarView;
 
 
     /* Assosiation des views Xml -> Java*/
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 getSupportActionBar().setTitle(DateFormater.dateFormatMonth(firstDayOfNewMonth));
-                loadMonthEvents();
+                //loadMonthEvents();
                 //Toast.makeText(getApplicationContext(),String.valueOf(DateFormater.getMonthFromTime(firstDayOfNewMonth)),Toast.LENGTH_SHORT).show();
                 //loadMonthEvents();
             }
@@ -220,30 +223,47 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        loadMonthEvents();
         //loadMonthEvents();
-        //loadAllEvents();
+        loadAllEvents();
         //compactCalendarView.showCalendarWithAnimation();
 
+        // pour effacer les valeurs des moins unique afin de recharger les nouvelles date de debut de chaque mois
+        EventCellAdapter.getMapUniqueMonth().clear();
+
     }
 
 
 
-    private void loadAllEvents(){
-        List<Long> allEventsDate = evenementDAO.findAllEventsDates();
-        /*
-        AutoCompleteTextView a = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        a.setTok
-        */
-        if(allEventsDate != null) {
-            compactCalendarView.removeAllEvents();
-            for (Long dateEvent : allEventsDate) {
-                compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));
-            }
-        }
-        List<Long> distinctEventsDate = evenementDAO.findDistinctEventsDates();
+    public void loadAllEvents(){
+        loadAllCallendarEvent();
+        List<Long> distinctEventsDate = evenementDAO.findDistinctAllEvents();
         adapterRecyclerView.setmDataSet(distinctEventsDate);
     }
+
+
+
+
+    private void loadAllCallendarEvent(){
+        List<Evenement> events = evenementDAO.findAll();
+        compactCalendarView.removeAllEvents();
+        if(events != null) {
+            for (Evenement event : events) {
+                long difference = DateFormater.getDifferenceDays(event.getDateDebut(), event.getDateFin());
+
+                compactCalendarView.addEvent(new Event(event.getColor(), event.getDateDebut(), event.getTitre()));
+                if (difference > 0) {
+                    for (int i = 1; i <= difference; i++) {
+                        Calendar c = Calendar.getInstance();
+                        c.setTimeInMillis(event.getDateDebut());
+                        c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + i);
+                        compactCalendarView.addEvent(new Event(event.getColor(), c.getTimeInMillis(), event.getTitre()));
+
+                    }
+                }
+            }
+        }
+    }
+
 
     private void loadMonthEvents(){
         List<Long> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
@@ -256,34 +276,6 @@ public class MainActivity extends AppCompatActivity
         List<Long> distinctEventsDate = evenementDAO.findDistinctMonthEvents(compactCalendarView.getFirstDayOfCurrentMonth());
         adapterRecyclerView.setmDataSet(distinctEventsDate);
     }
-
-    /*
-    private void loadMonthEvents(){
-         eventList = evenementDAO.findByDateEvent(compactCalendarView.getFirstDayOfCurrentMonth());
-                if(eventList != null) {
-                    compactCalendarView.removeAllEvents();
-                    for (Evenement event : eventList) {
-                        compactCalendarView.addEvent(new Event(Color.RED, event.getDateDebut(), event.getTitre()));
-                    }
-                }
-        adapterRecyclerView.setmDataSet(eventList);
-    }
-    */
-
-
-    /*
-    private void loadDayEvents(Date date){
-        eventList = evenementDAO.findByDateEvent(date);
-        if(eventList != null) {
-            compactCalendarView.removeAllEvents();
-            for (Evenement event : eventList) {
-                compactCalendarView.addEvent(new Event(Color.RED, event.getDateDebut(), event.getTitre()));
-            }
-        }
-        adapterRecyclerView.setmDataSet(eventList);
-    }
-    */
-
 
 }
 

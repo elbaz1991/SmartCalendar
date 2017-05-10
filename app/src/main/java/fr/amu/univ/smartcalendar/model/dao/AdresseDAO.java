@@ -15,6 +15,7 @@ import fr.amu.univ.smartcalendar.model.entity.Evenement;
 public class AdresseDAO extends DatabaseDAO{
     public static final String TABLE_NAME = "Adresse";
     public static final String COL_ID= "Id";
+    public static final String COL_ID_EVENT= "IdEvent";
     public static final String COL_ID_ADRESSE = "IdAdresse";
     public static final String COL_ADRESSE = "Adresse";
     public static final String COL_NOM = "Nom";
@@ -24,6 +25,7 @@ public class AdresseDAO extends DatabaseDAO{
 
     public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ( "+
             COL_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
+            COL_ID_EVENT +" INTEGER,"+
             COL_ID_ADRESSE +" TEXT,"+
             COL_ADRESSE +" TEXT,"+
             COL_NOM +" TEXT,"+
@@ -41,10 +43,11 @@ public class AdresseDAO extends DatabaseDAO{
     /**
      * @param adresse l'adresse à ajouter
      */
-    public boolean insert(Adresse adresse) {
+    public boolean insert(Adresse adresse,int EventId) {
         open();// ouverture de la connexion
         ContentValues values = new ContentValues();
         values.put(AdresseDAO.COL_ID_ADRESSE,adresse.getIdAdresse());
+        values.put(AdresseDAO.COL_ID_EVENT,EventId);
         values.put(AdresseDAO.COL_ADRESSE,adresse.getAdresse());
         values.put(AdresseDAO.COL_NOM,adresse.getNom());
         values.put(AdresseDAO.COL_LATITUDE,adresse.getLatitude());
@@ -65,7 +68,6 @@ public class AdresseDAO extends DatabaseDAO{
     public Adresse findByAdresseId(String adresseId){
 
         if(adresseId != null) {
-            Log.e("Adresse id : ",adresseId);
             Adresse adresse = new Adresse();
             String query = "SELECT * FROM Adresse WHERE " + AdresseDAO.COL_ID_ADRESSE + "='" + adresseId + "'";
             open();
@@ -73,6 +75,7 @@ public class AdresseDAO extends DatabaseDAO{
             while (cursor.moveToNext()){
                 adresse.setIdAdresse(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_ID_ADRESSE)));
                 adresse.setAdresse(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_ADRESSE)));
+                adresse.setIdEvent(cursor.getInt(cursor.getColumnIndex(AdresseDAO.COL_ID_EVENT)));
                 adresse.setNom(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_NOM)));
                 adresse.setLatitude(cursor.getDouble(cursor.getColumnIndex(AdresseDAO.COL_LATITUDE)));
                 adresse.setLongitude(cursor.getDouble(cursor.getColumnIndex(AdresseDAO.COL_LONGITUDE)));
@@ -80,5 +83,18 @@ public class AdresseDAO extends DatabaseDAO{
             }
         }
         return null;
+    }
+
+
+    /**
+     * @author elbaz
+     * @param idEvent l'evenement à supprimer de la base
+     */
+    public void delete(int idEvent) {
+        String query = "DELETE FROM "+TABLE_NAME + " WHERE "+COL_ID_EVENT +" ="+idEvent;
+        open();
+        db.execSQL(query);
+        close();
+
     }
 }

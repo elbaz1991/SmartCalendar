@@ -24,10 +24,6 @@
         <name>Orange</name>
         <code>#ec7316</code>
     </color>
-    <color>
-        <name>Cerise</name>
-        <code>#82092a</code>
-    </color>
 
     <color>
         <name>Fushia</name>
@@ -39,12 +35,12 @@
         <code>#ee8fa5</code>
     </color>
 
-
-
     <color>
-        <name>Gris chaud</name>
-        <code>#877a74</code>
+        <name>Cerise</name>
+        <code>#82092a</code>
     </color>
+
+
 
     <color>
         <name>Vert printemps</name>
@@ -60,6 +56,12 @@
         <name>Jaune shine</name>
         <code>#ffe524</code>
     </color>
+
+    <color>
+        <name>Gris chaud</name>
+        <code>#877a74</code>
+    </color>
+
 
     <!--
     <color>

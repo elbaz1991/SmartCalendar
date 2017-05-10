@@ -2,7 +2,9 @@ package fr.amu.univ.smartcalendar.model.entity;
 
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -19,6 +21,9 @@ public class Evenement {
         protected Adresse adresseRdv;
         protected long currentDate;
         protected int color;
+        protected int rappel1;
+        protected int rappel2;
+        protected String moyenneDeTransport;
 
 
     public Evenement() {
@@ -122,5 +127,29 @@ public class Evenement {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public int getRappel1() {
+        return rappel1;
+    }
+
+    public void setRappel1(int rappel1) {
+        this.rappel1 = rappel1;
+    }
+
+    public int getRappel2() {
+        return rappel2;
+    }
+
+    public void setRappel2(int rappel2) {
+        this.rappel2 = rappel2;
+    }
+
+    public String getMoyenneDeTransport() {
+        return moyenneDeTransport;
+    }
+
+    public void setMoyenneDeTransport(String moyenneDeTransport) {
+        this.moyenneDeTransport = moyenneDeTransport;
     }
 }

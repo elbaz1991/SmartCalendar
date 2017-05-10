@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by elbaz on 25/04/2017.
@@ -11,6 +12,7 @@ import java.util.TimeZone;
 
 public class DateFormater {
     private static SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy");
+    private static SimpleDateFormat dateFormatMonthYear = new SimpleDateFormat("MMMM yyyy");
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd - MMMM - yyyy");
     private static SimpleDateFormat dateFormatYyMmDd = new SimpleDateFormat("yyyy-MM-dd");
@@ -90,6 +92,22 @@ public class DateFormater {
 
     public static String dateFormatddMM(Date date){
         return dateFormatddMM.format(date);
+    }
+
+
+    /**
+     * @param date à transformer
+     * @return date au format MMMM yyyy
+     */
+    public static String dateFormatMonthYear(Date date){
+        String result =  dateFormatMonthYear.format(date);
+        return result.substring(0,1).toUpperCase() + result.substring(1);
+    }
+
+
+    public static long getDifferenceDays(long d1, long d2) {
+        long diff = d2 - d1;
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 }
 

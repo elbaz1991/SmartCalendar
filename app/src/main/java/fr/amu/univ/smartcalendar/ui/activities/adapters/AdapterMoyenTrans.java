@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import fr.amu.univ.smartcalendar.R;
 
 /**
@@ -17,20 +19,22 @@ import fr.amu.univ.smartcalendar.R;
  */
 
 public class AdapterMoyenTrans extends ArrayAdapter<String> {
-    Context c;
+    Context context;
     static String[] moyensDetrans = {"  Choisissez votre moyen de transport","  Voiture","  Vélo" , "  Transport commun","  à pieds"};
     int [] imagesMoyenDeTrans = {0, R.drawable.ic_voiture,R.drawable.ic_velo,R.drawable.ic_transportcommun,R.drawable.ic_apieds} ;
 
-    public AdapterMoyenTrans(Context c){
-        super(c,R.layout.model,moyensDetrans);
-        this.c = c;
+   // final static HashMap<Integer,String> moyensTrans = new HashMap<>();
+
+    public AdapterMoyenTrans(Context context){
+        super(context,R.layout.model,moyensDetrans);
+        this.context = context;
     }
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if(convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.model,null);
         }
 
@@ -48,7 +52,7 @@ public class AdapterMoyenTrans extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if(convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.model,null);
         }
 

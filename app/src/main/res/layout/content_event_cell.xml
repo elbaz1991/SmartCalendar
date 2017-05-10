@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.chauthai.swipereveallayout.SwipeRevealLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="3dp"
+    app:dragEdge="left"
+    android:layout_margin="6dp"
+    app:mode="same_level"
     >
 
+
+
+        <FrameLayout
+            android:id="@+id/delete_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_edge"
+
+
+            >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_delete"
+                    android:layout_gravity="center"/>
+        </FrameLayout>
+
+
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardView"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="4dp"
+
+            >
 
 
         <TextView
@@ -54,6 +86,7 @@
                     android:drawablePadding="@dimen/cell_drawable_padding"
                     />
         </LinearLayout>
+        </android.support.v7.widget.CardView>
 
 
-</android.support.v7.widget.CardView>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

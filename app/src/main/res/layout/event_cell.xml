@@ -7,6 +7,7 @@
     android:elevation="4dp"
     android:layout_margin="0dp"
     app:cardCornerRadius="0dp"
+    android:padding="4dp"
     app:cardBackgroundColor="@color/colorCellBack"
     >
 
@@ -18,11 +19,17 @@
         <TextView
             android:id="@+id/eventMonth"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/colorAccent"
+            android:layout_height="40dp"
             android:visibility="gone"
-            android:textSize="22dp"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:fontFamily="casual"
+            android:textColor="#000"
+            android:shadowColor="#fefdfd"
+            android:shadowRadius="2"
             android:gravity="center"
+            android:alpha="0.9"
+            android:clickable="false"
          />
 
         <FrameLayout
@@ -33,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:textColor="#7c7c7c"
+                    android:textColor="@color/colorTextCell"
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="5dp"
                     />
@@ -42,21 +49,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-
+                    android:textColor="@color/colorTextCell"
                     android:layout_marginTop="21dp"
                     android:layout_marginLeft="5dp"
                     />
 
-                <!--
-                <LinearLayout
-                    android:id="@+id/contentTest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@color/colorPrimary">
 
-                </LinearLayout>
-                -->
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/eventListContent_recyclerView"
@@ -65,7 +64,9 @@
                     android:layout_marginLeft="45dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="15dp"
-                    android:layout_marginBottom="3dp">
+                    android:layout_marginBottom="3dp"
+
+                    >
 
                 </android.support.v7.widget.RecyclerView>
 

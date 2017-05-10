@@ -22,10 +22,13 @@
         app:compactCalendarTextSize="13sp"
         app:compactCalendarBackgroundColor="#fcfcfc"
         app:compactCalendarTextColor="#000000"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="#88eaab"
-        app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
-        app:compactCalendarMultiEventIndicatorColor="#eb0404"
+        app:compactCalendarEventIndicatorStyle="small_indicator"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#d1cbd0ce"
+        app:compactCalendarCurrentDayIndicatorStyle="no_fill_large_indicator"
+        app:compactCalendarCurrentDayBackgroundColor="#a11c04f9"
+        app:compactCalendarMultiEventIndicatorColor="#a0eb0404"
         app:compactCalendarDisplayOtherMonthDays="true"
+        app:compactCalendarCurrentSelectedDayIndicatorStyle="fill_large_indicator"
         app:compactCalendarOtherMonthDaysTextColor="#FFADADAD"
 
         />

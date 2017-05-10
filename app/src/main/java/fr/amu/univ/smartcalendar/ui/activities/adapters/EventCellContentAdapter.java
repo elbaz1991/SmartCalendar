@@ -1,24 +1,22 @@
 package fr.amu.univ.smartcalendar.ui.activities.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.internal.PlaceImpl;
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.entity.Evenement;
 
@@ -30,25 +28,20 @@ import fr.amu.univ.smartcalendar.model.entity.Evenement;
  */
 public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellContentAdapter.EventHolder>{
     private List<Evenement> mDataSet;
-    private List<Long> mDateEventSet;
     private LayoutInflater mInflater;
-    EventViewAdapter eventViewAdapter;
+    private EventViewAdapter eventViewAdapter;
+    private EventCellAdapter eventCellAdapter;
 
-    public EventCellContentAdapter(Context context){
+    public EventCellContentAdapter(Context context,EventCellAdapter eventCellAdapter){
         mInflater = LayoutInflater.from(context);
         eventViewAdapter = new EventViewAdapter(context);
-        mDateEventSet = new ArrayList<>();
+        this.eventCellAdapter = eventCellAdapter;
     }
 
     @Override
     public EventHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View cell = mInflater.inflate(R.layout.content_event_cell,parent,false);
-        cell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(),"cell clicked : "+view.getTag(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        final View cell = mInflater.inflate(R.layout.content_event_cell,parent,false);
+
         EventHolder holder = new EventHolder(cell);
         return holder;
     }
@@ -60,7 +53,6 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
 
     @Override
     public int getItemCount() {
-        //Log.e("Size : ",String.valueOf(mDataSet.size()));
         int itemCount = 0;
         if(mDataSet != null){
             itemCount = mDataSet.size();
@@ -91,6 +83,9 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
         private final TextView ui_cell_contentDuree;
         private TextView ui_cell_contentPosition;
         private TextView ui_cell_ContentColor;
+        private final View ui_deleteLayout;
+        private final CardView ui_cardView;
+        private final SwipeRevealLayout ui_swipe_layout;
 
         public EventHolder(View cell) {
             super(cell);
@@ -98,11 +93,23 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
             ui_cell_contentDuree = (TextView) cell.findViewById(R.id.eventDuree);
             ui_cell_contentPosition = (TextView) cell.findViewById(R.id.eventPosition);
             ui_cell_ContentColor = (TextView) cell.findViewById(R.id.eventContentColor);
+            ui_deleteLayout = cell.findViewById(R.id.delete_layout);
+            ui_cardView = (CardView) cell.findViewById(R.id.cardView);
+            ui_swipe_layout = (SwipeRevealLayout) cell.findViewById(R.id.swipe_layout);
         }
 
 
-        public void layoutForEvent(Evenement event, EventHolder holder){
-            ui_cell_ContentColor.setBackgroundColor(event.getColor());
+        public void layoutForEvent(Evenement event, final EventHolder holder){
+            holder.itemView.setTag(event.getId());
+
+           holder.ui_cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(),"cell clicked : "+holder.itemView.getTag(),Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            holder.ui_cell_ContentColor.setBackgroundColor(event.getColor());
             holder.ui_cell_content_title.setText(eventViewAdapter.formatTitre(event.getTitre(),event.getDateDebut(),event.getDateFin(),event.getCurrentDate()));
             holder.ui_cell_contentDuree.setText(eventViewAdapter.getDuree(event.getDateDebut(),event.getDateFin(),event.getCurrentDate()));
 
@@ -113,7 +120,42 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
                 holder.ui_cell_contentPosition.setVisibility(View.GONE);
             }
 
-            holder.itemView.setTag(event.getId());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.ui_deleteLayout.setBackgroundTintList(ColorStateList.valueOf(event.getColor()));
+            }
+            holder.ui_swipe_layout.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener(){
+                @Override
+                public void onOpened(SwipeRevealLayout view) {
+                    super.onOpened(view);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+                    //alert.setTitle("Alert!!");
+                    alert.setMessage("Voulez-vous supprimer définitivement cet évènement ?");
+                    alert.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            eventCellAdapter.deleteEvent(Integer.valueOf(holder.itemView.getTag().toString()));
+                            dialog.dismiss();
+
+                        }
+                    });
+                    alert.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            holder.ui_swipe_layout.close(true);
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.show();
+
+                }
+            });
+
+
+
         }
 
 
