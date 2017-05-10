@@ -306,12 +306,12 @@ public class EvenementDAO extends DatabaseDAO{
 
         open();
         Cursor cursor = db.rawQuery(query, null);
-        close();
+
         if(cursor != null){
             cursor.moveToFirst();
             SmartCalendarEventModel event = new SmartCalendarEventModel();
             event.setEventId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
-            event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)) + event.getEventId());
+            event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)));
             event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
             event.setOriginAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DEPART)));
             event.setDestinationAddressId(cursor.getInt(cursor.getColumnIndex(COL_ADDRESS_DESTINATION)));
@@ -319,6 +319,7 @@ public class EvenementDAO extends DatabaseDAO{
             event.setDateFin(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
             return event;
         }
+        close();
         return null;
     }
 

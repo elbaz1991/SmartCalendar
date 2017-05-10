@@ -63,7 +63,6 @@ public class AddressDAO extends DatabaseDAO{
 
         open();
         Cursor cursor = db.rawQuery(query, null);
-        close();
 
         if(cursor != null) {
             cursor.moveToFirst();
@@ -73,8 +72,11 @@ public class AddressDAO extends DatabaseDAO{
             addressModel.setLongitude(cursor.getDouble(cursor.getColumnIndex(COL_LONGITUDE)));
             addressModel.setLatitude(cursor.getDouble(cursor.getColumnIndex(COL_LATITUDE)));
             addressModel.setEventId(cursor.getInt(cursor.getColumnIndex(COL_EVENT_ID)));
-            addressModel.setcursor.
+            addressModel.setOrigin(cursor.getInt(cursor.getColumnIndex(COL_ORIGIN) > 0 ? 1 : 0));
+            addressModel.setDestination(cursor.getInt(cursor.getColumnIndex(COL_DESTINATION) > 1 ? 1 : 0));
+            return addressModel;
         }
+        close();
         return null;
     }
 

@@ -115,7 +115,7 @@ public class AddEventActivity extends AppCompatActivity {
             event = new SmartCalendarEventModel(this, eventId);
             departureAddress = new SmartCalendarAddressModel(this, event.getOriginAddressId());
             destinationAddress = new SmartCalendarAddressModel(this, event.getDestinationAddressId());
-            participants = new SmartCalendarParticipantModel(eventId);
+            participants = new SmartCalendarParticipantModel(this, eventId);
 
             /* filling form based on the data retrieved from the database **/
             ui_titre.setText(event.getTitre());
@@ -125,7 +125,7 @@ public class AddEventActivity extends AppCompatActivity {
             //ui_heureDebut.setText(simpleHeureFormat.format());
             //ui_heureFin.setText(simpleHeureFormat.format());
 
-            if(!departureAddress.getAddressLabel().equals("")){
+            /*if(!departureAddress.getAddressLabel().equals("")){
                 ui_lieuDepart.setText(departureAddress.getAddressLabel());
             }else{
                 ui_lieuDepart.setText(SmartCalendarUtils.getAddressFromCoordinates(
@@ -141,7 +141,7 @@ public class AddEventActivity extends AppCompatActivity {
                                 destinationAddress.getLatitude(), destinationAddress.getLongitude()
                         )
                 );
-            }
+            } */
         }else {
             event = new SmartCalendarEventModel(this);
             departureAddress = new SmartCalendarAddressModel(this);

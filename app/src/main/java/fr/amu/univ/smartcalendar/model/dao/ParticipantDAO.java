@@ -2,6 +2,11 @@ package fr.amu.univ.smartcalendar.model.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.amu.univ.smartcalendar.model.entity.SmartCalendarParticipantModel;
 
@@ -50,5 +55,23 @@ public class ParticipantDAO extends DatabaseDAO {
         return true;
     }
 
-    //public static List<>
+    public SmartCalendarParticipantModel getParticipantsByEventId(int eventId){
+        SmartCalendarParticipantModel participant = new SmartCalendarParticipantModel();
+        String query = "SELECT " + COL_PARTICIPANT + " FROM " + TABLE_NAME + " WHERE " + COL_EVENT_ID + " = " + eventId;
+
+        open();
+        Cursor cursor = db.rawQuery(query, null); //query(true, TABLE_NAME, )
+
+        if(cursor != null && cursor.getCount() > 0){
+            List<Integer> participants = new ArrayList<>();
+            cursor.moveToFirst();
+            do {
+                //Log.d("DEBUG", "test" + cursor.getInt(cursor.getColumnIndex(COL_PARTICIPANT)));
+                participants.add(cursor.getInt(cursor.getColumnIndex(COL_PARTICIPANT)));
+            }while(cursor.moveToNext());
+            participant.setParticipants(participants);
+        }
+        close();
+        return participant;
+    }
 }

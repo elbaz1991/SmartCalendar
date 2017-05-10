@@ -40,7 +40,7 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
     private RecyclerView ui_eventContentRecyclerView;
     //private SmartCalendarEventCellContentAdapter adapterContentRecyclerView;
 
-    private LinearLayout linearLayout;
+    private final LinearLayout smartCalendarEventCellDetailWrapper;
 
     private String lastDisplayedMonth ="";
 
@@ -56,7 +56,7 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
         smartCalendarEventCellStartDateTime = (TextView)cell.findViewById(R.id.smart_calendar_event_cell_start_date_time);
         smartCalendarEventCellToWrapper = (TextView)cell.findViewById(R.id.smart_calendar_event_cell_to_wrapper);
         smartCalendarEventCellEdit = (ImageButton)cell.findViewById(R.id.smart_calendar_event_cell_edit);
-
+        smartCalendarEventCellDetailWrapper = (LinearLayout)cell.findViewById(R.id.smart_calendar_event_cell_detail_wrapper);
         /*/linearLayout = (LinearLayout) cell.findViewById(R.id.contentTest);
         ui_eventContentRecyclerView = (RecyclerView) cell.findViewById(R.id.eventListContent_recyclerView);
         ui_eventContentRecyclerView.setLayoutManager(new LinearLayoutManager(cell.getContext()));
@@ -89,6 +89,16 @@ public class SmartCalendarEventItemViewHolder extends RecyclerView.ViewHolder{
                 editIntent.putExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID, String.valueOf(event.getEventId()));
 
                 context.startActivity(editIntent);
+            }
+        });
+        smartCalendarEventCellDetailWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewIntent = new Intent(context, ViewEventActivity.class);
+                viewIntent.setAction(Intent.ACTION_SEND);
+                viewIntent.putExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID, String.valueOf(event.getEventId()));
+
+                context.startActivity(viewIntent);
             }
         });
         /*String currentMonth = SmartCalendarDateFormat.dateFormatMonth(new Date(dateEvent));
