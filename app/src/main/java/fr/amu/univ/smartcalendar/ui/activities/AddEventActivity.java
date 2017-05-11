@@ -1,5 +1,6 @@
 package fr.amu.univ.smartcalendar.ui.activities;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,7 +22,12 @@ import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import fr.amu.univ.smartcalendar.R;
@@ -50,7 +57,7 @@ public class AddEventActivity extends AppCompatActivity {
     private TextView ui_dateFin;
     private TextView ui_heureDebut;
     private TextView ui_heureFin;
-    private EditText ui_lieuDepart;
+    private EditText smartCalendarDepartureLocation;
     private EditText smartCalendarDestinationLocation;
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE dd MMM yyyy");
@@ -59,9 +66,8 @@ public class AddEventActivity extends AppCompatActivity {
     private Calendar dateDebut;
     private Calendar dateFin;
     private final Calendar calendar = Calendar.getInstance();
+    private final PlaceAutocomplete.IntentBuilder intentBuilder = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY);
 
-    //
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
 
     SmartCalendarAddressModel departureAddress;
     SmartCalendarAddressModel destinationAddress;
@@ -79,20 +85,20 @@ public class AddEventActivity extends AppCompatActivity {
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        final Intent eventData = getIntent();
+        int eventId = Integer.parseInt(eventData.getStringExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID));
 
 
         final TextView btnSave = (TextView) findViewById(R.id.toolbar_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Log.e("Date Debut : ", (dateDebut.getTime().toString()));
-                Log.e("Date Debut long : ", (String.valueOf(dateDebut.getTime().getTime())));
-
-                Log.e("Date Fin : ", (dateFin.getTime().toString()));
-                Log.e("Date Fin long : ", (String.valueOf(dateFin.getTime().getTime())));
-
-                Toast.makeText(getApplicationContext(),saveData().toString(),Toast.LENGTH_SHORT).show();*/
-                saveData();
+                Intent bundleIntent = new Intent(AddEventActivity.this, MainActivity.class);
+                if(saveData()){
+                    bundleIntent.putExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_OBJECT, event);
+                    setResult(Activity.RESULT_OK , bundleIntent);
+                    finishActivity(SmartCalendarFieldsLabel.REQUEST_EVENT_EDITION_CODE);
+                }
             }
         });
 
@@ -103,13 +109,14 @@ public class AddEventActivity extends AppCompatActivity {
         ui_dateFin = (TextView) findViewById(R.id.dateFin);
         ui_heureDebut = (TextView) findViewById(R.id.heureDebut);
         ui_heureFin = (TextView) findViewById(R.id.heureFin);
-        ui_lieuDepart = (EditText) findViewById(R.id.lieuDepart);
+        smartCalendarDepartureLocation = (EditText)findViewById(R.id.smart_calendar_departure_location);
         //ui_lieuDepart.setFocusable(false);
         smartCalendarDestinationLocation = (EditText)findViewById(R.id.smart_calendar_destination_location);
 
+        dateDebut = Calendar.getInstance();
+        dateFin = Calendar.getInstance();
+
         //========== */
-        Intent eventData = getIntent();
-        int eventId = Integer.parseInt(eventData.getStringExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID));
 
         if(eventId > 0){
             event = new SmartCalendarEventModel(this, eventId);
@@ -147,9 +154,6 @@ public class AddEventActivity extends AppCompatActivity {
             departureAddress = new SmartCalendarAddressModel(this);
             destinationAddress = new SmartCalendarAddressModel(this);
 
-            dateDebut = Calendar.getInstance();
-            dateFin = Calendar.getInstance();
-
             Log.e("DateD",dateDebut.getTime().toString());
 
             ui_dateDebut.setText(simpleDateFormat.format(dateDebut.getTime()));
@@ -171,6 +175,24 @@ public class AddEventActivity extends AppCompatActivity {
         ui_dateFin.setOnClickListener(onClickListenerDatePicker());
         ui_heureFin.setOnClickListener(onClickListenerDatePicker());
         ui_heureDebut.setOnClickListener(onClickListenerDatePicker());
+
+        smartCalendarDepartureLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(hasFocus){
+                    handlePositionUpdate(SmartCalendarFieldsLabel.REQUEST_DEPARTURE_PLACE_CODE);
+                }
+            }
+        });
+
+        smartCalendarDestinationLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus){
+                if(hasFocus){
+                    handlePositionUpdate(SmartCalendarFieldsLabel.REQUEST_DESTINATION_PLACE_CODE);
+                }
+            }
+        });
     }
 
 
@@ -190,9 +212,9 @@ public class AddEventActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                int jour = calendar.get(Calendar.DAY_OF_MONTH);
-                int mois = calendar.get(Calendar.MONTH);
-                int annee = calendar.get(Calendar.YEAR);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
 
                 if(view == ui_dateDebut){
                     DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -202,7 +224,7 @@ public class AddEventActivity extends AppCompatActivity {
                             ui_dateDebut.setText(simpleDateFormat.format(dateDebut.getTime()));
                         }
                     }
-                            ,annee,mois,jour);
+                            ,year,month,day);
                     datePickerDialog.show();
                 }
                 if(view == ui_dateFin){
@@ -213,7 +235,7 @@ public class AddEventActivity extends AppCompatActivity {
                             ui_dateFin.setText(simpleDateFormat.format(dateFin.getTime()));
                         }
                     }
-                            ,annee,mois,jour);
+                            ,year,month,day);
                     datePickerDialog.show();
                 }
                 if(view == ui_heureDebut){
@@ -261,43 +283,42 @@ public class AddEventActivity extends AppCompatActivity {
         event.setTitre(titre);
         event.setDescription(desc);
         event.setDateDebut(dateDebut.getTime());
-        //event.setDateFin(dateFin.getTime());
+        event.setDateFin(dateFin.getTime());
         /**
          * setting departure address information
          */
-        departureAddress.setAddressLabel(ui_lieuDepart.getText().toString());
-        LatLng location = SmartCalendarUtils.getGeoLocationByLabel(departureAddress.getAddressLabel());
-        departureAddress.setLatitude(location.latitude);
-        departureAddress.setLongitude(location.longitude);
-        departureAddress.setOrigin(1);
-        departureAddress.setDestination(0);
-
-        destinationAddress.setAddressLabel(smartCalendarDestinationLocation.getText().toString());
-        location = SmartCalendarUtils.getGeoLocationByLabel(destinationAddress.getAddressLabel());
-        destinationAddress.setLatitude(location.latitude);
-        destinationAddress.setLongitude(location.longitude);
-        destinationAddress.setOrigin(0);
-        destinationAddress.setDestination(1);
         boolean result = true;
+        if(smartCalendarDepartureLocation.getText().toString().equals("")){
+            smartCalendarDepartureLocation.requestFocus();
+        }else if(smartCalendarDestinationLocation.getText().toString().equals("")){
+            smartCalendarDestinationLocation.requestFocus();
+        }else {
+            departureAddress.setOrigin(1);
+            departureAddress.setDestination(0);
 
-        if(event.getEventId() > 0){
-            result &= evenementDAO.update(event);
-            result &= addressDAO.update(departureAddress);
-            result &= addressDAO.update(destinationAddress);
-            result &= participantDAO.update(participants);
+            destinationAddress.setOrigin(0);
+            destinationAddress.setDestination(1);
 
-        }else{
-            /* create new data **/
-            event.setEventId((int)evenementDAO.insert(event));
-            departureAddress.setEventId(event.getEventId());
-            departureAddress.setAddressId((int)addressDAO.insert(departureAddress));
-            evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DEPART, departureAddress.getAddressId());
 
-            destinationAddress.setEventId(event.getEventId());
-            destinationAddress.setAddressId((int)addressDAO.insert(destinationAddress));
-            evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DESTINATION, destinationAddress.getAddressId());
-            /*participants.setEventId(event.getEventId());
-            result &= participantDAO.insert(participants);*/
+            if (event.getEventId() > 0) {
+                result &= evenementDAO.update(event);
+                result &= addressDAO.update(departureAddress);
+                result &= addressDAO.update(destinationAddress);
+                result &= participantDAO.update(participants);
+
+            } else {
+                /* create new data **/
+                event.setEventId((int) evenementDAO.insert(event));
+                departureAddress.setEventId(event.getEventId());
+                departureAddress.setAddressId((int) addressDAO.insert(departureAddress));
+                evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DEPART, departureAddress.getAddressId());
+
+                destinationAddress.setEventId(event.getEventId());
+                destinationAddress.setAddressId((int) addressDAO.insert(destinationAddress));
+                evenementDAO.updateIntField(event.getEventId(), EvenementDAO.COL_ADDRESS_DESTINATION, destinationAddress.getAddressId());
+                /*participants.setEventId(event.getEventId());
+                result &= participantDAO.insert(participants);*/
+            }
         }
 
         return result;
@@ -307,14 +328,16 @@ public class AddEventActivity extends AppCompatActivity {
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
      */
-    private static final int REQUEST_PLACE_PICKER = 1;
+
     public void onClickUpdateDeparturePosition(View view) {
-        /*try {
-            Log.e("Yeeeeeeeeeees !! ","Yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees");
-            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+        handlePositionUpdate(SmartCalendarFieldsLabel.REQUEST_DEPARTURE_PLACE_CODE);
+    }
+
+    public void handlePositionUpdate(int code) {
+        try {
             Intent intent = intentBuilder.build(this);
             // Start the Intent by requesting a result, identified by a request code.
-            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+            startActivityForResult(intent, code);
         } catch (GooglePlayServicesRepairableException e) {
             GooglePlayServicesUtil
                     .getErrorDialog(e.getConnectionStatusCode(), this, 0);
@@ -322,55 +345,44 @@ public class AddEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Google Play Services is not available.",
                     Toast.LENGTH_LONG)
                     .show();
-        }*/
-
+        }
     }
 
     public void onClickUpdateDestinationPosition(View view){
-
+        handlePositionUpdate(SmartCalendarFieldsLabel.REQUEST_DESTINATION_PLACE_CODE);
     }
-    /*
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // BEGIN_INCLUDE(activity_result)
-        if (requestCode == REQUEST_PLACE_PICKER) {
-            // This result is from the PlacePicker dialog.
-
-            // Enable the picker option
-            //showPickAction(true);
-
+        if (requestCode == SmartCalendarFieldsLabel.REQUEST_DEPARTURE_PLACE_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                /* User has picked a place, extract data.
-                   Data is extracted from the returned intent by retrieving a Place object from
-                   the PlacePicker.
-                 * /
-                final Place place = PlacePicker.getPlace(this, data);
+                Place place = PlaceAutocomplete.getPlace(this, data);
 
-                /* A Place object contains details about that place, such as its name, address
-                and phone number. Extract the name, address, phone number, place ID and place types.
-                 * /
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                final CharSequence phone = place.getPhoneNumber();
-                final String placeId = place.getId();
-                String attribution = PlacePicker.getAttributions(data);
-                if(attribution == null){
-                    attribution = "";
-                }
-
-                ui_lieuDepart.setText(place.getAddress());
-
-
-
+                departureAddress.setAddressLabel(place.getAddress().toString());
+                departureAddress.setLatitude(place.getLatLng().latitude);
+                departureAddress.setLongitude(place.getLatLng().longitude);
+                departureAddress.setOrigin(1);
+                departureAddress.setDestination(0);
+                smartCalendarDepartureLocation.setText(place.getAddress());
             } else {
                 // User has not selected a place, hide the card.
                 //getCardStream().hideCard(CARD_DETAIL);
             }
-
+        }else if(requestCode == SmartCalendarFieldsLabel.REQUEST_DESTINATION_PLACE_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                destinationAddress.setLatitude(place.getLatLng().latitude);
+                destinationAddress.setLongitude(place.getLatLng().longitude);
+                destinationAddress.setAddressLabel(place.getAddress().toString());
+                destinationAddress.setOrigin(0);
+                destinationAddress.setDestination(1);
+                smartCalendarDestinationLocation.setText(place.getAddress().toString());
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
         // END_INCLUDE(activity_result)
-    }*/
+    }
 }

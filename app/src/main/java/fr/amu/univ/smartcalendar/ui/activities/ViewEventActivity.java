@@ -22,6 +22,7 @@ import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.adapters.SmartCalendarNavigationAdapter;
 import fr.amu.univ.smartcalendar.model.entity.SmartCalendarActivityModel;
 import fr.amu.univ.smartcalendar.model.entity.SmartCalendarAddressModel;
+import fr.amu.univ.smartcalendar.model.entity.SmartCalendarEventModel;
 import fr.amu.univ.smartcalendar.plugins.direction.SmartCalendarDirection;
 import fr.amu.univ.smartcalendar.plugins.direction.api.SmartCalendarGoogleDirectionCallback;
 import fr.amu.univ.smartcalendar.plugins.direction.constant.SmartCalendarTransportMode;
@@ -30,6 +31,7 @@ import fr.amu.univ.smartcalendar.plugins.weather.SmartCalendarWeather;
 import fr.amu.univ.smartcalendar.plugins.weather.api.SmartCalendarWeatherCallBack;
 import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
 import fr.amu.univ.smartcalendar.plugins.weather.models.SmartCalendarWeatherModel;
+import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarUtils;
 
@@ -41,17 +43,14 @@ import fr.amu.univ.smartcalendar.utils.SmartCalendarUtils;
 
 public class ViewEventActivity extends Activity implements SmartCalendarGoogleDirectionCallback, SmartCalendarWeatherCallBack {
     private Object lock = new Object();
-    private static final String DIRECTION_API_SERVER_KEY = "AIzaSyBoxT_Im1KWhogP6ERKp5Skw2tTUIP_xRk";
-
-    private static final String WEATHER_API_SERVER_KEY = "c631d13091388de7ae8c89007238da75";
 
    // private static final String REQUEST_BASE_URI = "https://maps.googleapis.com/maps/";
 
     //private static final HttpTransport SMART_CALENDAR_HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
 
-    private SmartCalendarAddressModel destinationAddress;
+    private SmartCalendarAddressModel destinationAddress, originAddress;
 
-    private SmartCalendarActivityModel smartCalendarActivity;
+    private SmartCalendarEventModel smartCalendarEvent;
 
     private Intent paramsReader = null;
 
@@ -64,16 +63,12 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
 
     private LinearLayout smartCalendarDirectionItems;
 
-    public static final String TRAFFIC_KEY_DURATION = "duration";
-    public static final String TRAFFIC_KEY_DISTANCE = "distance";
-    public static final String TRAFFIC_KEY_ROUTE = "route";
-    public static final String TRAFFIC_KEY_ROUTE_POINTS = "route_points";
-    public static final String TRAFFIC_KEY_TRANSPORT_MODE = "transport_mode";
+    private String transportMode;
 
 
 
-    LatLng source = new LatLng(43.299847, 5.385218);
-    LatLng destination = new LatLng(43.231412, 5.437300);
+    LatLng source , destination; /*= new LatLng(43.299847, 5.385218);
+    LatLng destination = new LatLng(43.231412, 5.437300) ; */
 
 
     @Override
@@ -125,7 +120,6 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent){
-        Log.d("DEBUG", "relance de la fonction" + requestCode + " " + resultCode);
         if(requestCode == 0){
             WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             if(!wifiManager.isWifiEnabled()){
@@ -135,27 +129,30 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
     }
 
     public void renderActivity(){
-        Log.d("DEBUG", "relance de la fonction");
         setContentView(R.layout.activity_view_event);
         activity_title = (TextView) findViewById(R.id.smart_calendar_view_activity_title);
 
         smartCalendarDirectionItems = (LinearLayout) findViewById(R.id.smart_calendar_direction_items);
 
         paramsReader = getIntent();
-        smartCalendarActivity = (SmartCalendarActivityModel) paramsReader.getParcelableExtra("calendar_activity");
-        if (smartCalendarActivity != null) {
-            //destinationAddress = new SmartCalendarAddressModel(this, smartCalendarActivity.getAddressId());
+        int eventId = Integer.parseInt(paramsReader.getStringExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID));
+        //smartCalendarEvent = (SmartCalendarActivityModel) paramsReader.getParcelableExtra("calendar_activity");
+        if (eventId > 0) {Log.d("DEBUG", "event id " + eventId);
+            smartCalendarEvent = new SmartCalendarEventModel(this, eventId);
+            originAddress = new SmartCalendarAddressModel(this, smartCalendarEvent.getOriginAddressId());
+            destinationAddress = new SmartCalendarAddressModel(this, smartCalendarEvent.getDestinationAddressId());
+
             renderWeather();
             renderDirectionProposal();
         } else {
             //We can't display unavailable activities their for redirect user to the activity creation page.
         }
-        renderWeather();
-        renderDirectionProposal();
+
     }
 
     private void renderWeather(){
-        SmartCalendarWeather.createWithServerKey(WEATHER_API_SERVER_KEY).setDestination(destination).execute(this);
+        destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
+        SmartCalendarWeather.createWithServerKey(SmartCalendarFieldsLabel.WEATHER_API_SERVER_KEY).setDestination(destination).execute(this);
     }
 
     @Override
@@ -225,8 +222,10 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
 
 
     private void renderDirectionProposal(){
-        SmartCalendarDirection.createWithServerKey(DIRECTION_API_SERVER_KEY).setOrigin(source)
-                .setDestination(destination).setTransportMode(SmartCalendarTransportMode.WALKING)
+        destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
+        source = new LatLng(originAddress.getLatitude(), originAddress.getLongitude());
+        SmartCalendarDirection.createWithServerKey(SmartCalendarFieldsLabel.DIRECTION_API_SERVER_KEY).setOrigin(source)
+                .setDestination(destination).setTransportMode(transportMode)
                 .setAlternativeRoute(true).execute(this);
     }
 
@@ -239,12 +238,12 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
             HashMap<String, String> map;
             for(int index = 0; index < direction.getRouteList().size(); index++){
                 map = new HashMap<>();
-                map.put(TRAFFIC_KEY_ROUTE, " " + (index + 1));
-                map.put(TRAFFIC_KEY_ROUTE_POINTS, direction.getRouteList().get(index).getOverviewPolyline().getRawPointList());
+                map.put(SmartCalendarFieldsLabel.TRAFFIC_KEY_ROUTE, " " + (index + 1));
+                map.put(SmartCalendarFieldsLabel.TRAFFIC_KEY_ROUTE_POINTS, direction.getRouteList().get(index).getOverviewPolyline().getRawPointList());
                 //map.put(TRAFFIC_KEY_DISTANCE, direction.getRouteList().get(index).getOverviewPolyline());
-                map.put(TRAFFIC_KEY_DURATION, direction.getRouteList().get(index).getLegList().get(0).getDuration().getText());
-                map.put(TRAFFIC_KEY_DISTANCE, direction.getRouteList().get(index).getLegList().get(0).getDistance().getText());
-                map.put(TRAFFIC_KEY_TRANSPORT_MODE, "walking");
+                map.put(SmartCalendarFieldsLabel.TRAFFIC_KEY_DURATION, direction.getRouteList().get(index).getLegList().get(0).getDuration().getText());
+                map.put(SmartCalendarFieldsLabel.TRAFFIC_KEY_DISTANCE, direction.getRouteList().get(index).getLegList().get(0).getDistance().getText());
+                map.put(SmartCalendarFieldsLabel.TRAFFIC_KEY_TRANSPORT_MODE, "walking");
                 //activityDayOfWeek.setText(activityDayOfWeek.getText() + direction.getRouteList().get(index).getOverviewPolyline().getRawPointList() + "\n");
                 adapter = new SmartCalendarNavigationAdapter(ViewEventActivity.this, map);
                 smartCalendarDirectionItems.addView(adapter.getView(index));

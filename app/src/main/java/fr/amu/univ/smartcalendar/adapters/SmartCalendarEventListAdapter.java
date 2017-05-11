@@ -68,6 +68,17 @@ public class SmartCalendarEventListAdapter extends RecyclerView.Adapter<SmartCal
         }
     }
 
+    public void swapCalendarEvent(SmartCalendarEventModel event){
+        int eventId = event.getEventId();
+        for(SmartCalendarEventModel item : this.calendarDataSet){
+            if(eventId == item.getEventId()){
+                this.calendarDataSet.remove(item);
+                this.calendarDataSet.add(event);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
     public void setCalendarDataSet(List<SmartCalendarEventModel> dataSet){
         if(dataSet == null){
             this.calendarDataSet = new ArrayList<>();

@@ -18,8 +18,10 @@ import java.util.HashMap;
 
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.plugins.direction.constant.SmartCalendarTransportMode;
+import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
 import fr.amu.univ.smartcalendar.ui.activities.NavigateToEventActivity;
 import fr.amu.univ.smartcalendar.ui.activities.ViewEventActivity;
+import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
 
 /**
@@ -50,14 +52,14 @@ public class SmartCalendarNavigationAdapter {
         TextView trafficDistance = (TextView)view.findViewById(R.id.smart_calendar_traffic_distance);
 
         trafficJamTitle.setText(context.getResources().getString(R.string.smart_calendar_itinerary_label) + " " + (i + 1));
-        trafficJamDuration.setText(context.getResources().getString(R.string.smart_calendar_duration_label) + " : " + renderData.get(ViewEventActivity.TRAFFIC_KEY_DURATION));
-        trafficDistance.setText(context.getResources().getString(R.string.smart_calendar_distance_label) + " : " + renderData.get(ViewEventActivity.TRAFFIC_KEY_DISTANCE));
+        trafficJamDuration.setText(context.getResources().getString(R.string.smart_calendar_duration_label) + " : " + renderData.get(SmartCalendarFieldsLabel.TRAFFIC_KEY_DURATION));
+        trafficDistance.setText(context.getResources().getString(R.string.smart_calendar_distance_label) + " : " + renderData.get(SmartCalendarFieldsLabel.TRAFFIC_KEY_DISTANCE));
         ImageView transportMode = (ImageView)view.findViewById(R.id.smart_calendar_traffic_jam_icon);
         SmartCalendarImageLoader imageLoader = new SmartCalendarImageLoader(context);
         //context.getResources().getDrawable(R.drawable.bicycle).get
         //String fileDirectory = "android.resource://fr.amu.univ.smartcalendar/drawable/";
         //String path;
-        switch (renderData.get(ViewEventActivity.TRAFFIC_KEY_TRANSPORT_MODE)){
+        switch (renderData.get(SmartCalendarFieldsLabel.TRAFFIC_KEY_TRANSPORT_MODE)){
             case SmartCalendarTransportMode.BICYCLING:
                 if(Build.VERSION.SDK_INT >= 21) {
                     transportMode.setImageDrawable(context.getDrawable(R.drawable.bicycle));
@@ -94,8 +96,8 @@ public class SmartCalendarNavigationAdapter {
             public void onClick(View view) {
                 Intent navigationData = new Intent(context, NavigateToEventActivity.class);
                 navigationData.setAction(Intent.ACTION_SEND);
-                navigationData.putExtra(ViewEventActivity.TRAFFIC_KEY_TRANSPORT_MODE, renderData.get(ViewEventActivity.TRAFFIC_KEY_TRANSPORT_MODE));
-                navigationData.putExtra(ViewEventActivity.TRAFFIC_KEY_ROUTE_POINTS, renderData.get(ViewEventActivity.TRAFFIC_KEY_ROUTE_POINTS));
+                navigationData.putExtra(SmartCalendarFieldsLabel.TRAFFIC_KEY_TRANSPORT_MODE, renderData.get(SmartCalendarFieldsLabel.TRAFFIC_KEY_TRANSPORT_MODE));
+                navigationData.putExtra(SmartCalendarFieldsLabel.TRAFFIC_KEY_ROUTE_POINTS, renderData.get(SmartCalendarFieldsLabel.TRAFFIC_KEY_ROUTE_POINTS));
                 context.startActivity(navigationData);
             }
         });

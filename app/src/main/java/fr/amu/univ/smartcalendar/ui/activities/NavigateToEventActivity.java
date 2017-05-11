@@ -18,6 +18,7 @@ import java.util.List;
 
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.plugins.direction.models.SmartCalendarDirectionRouteModel;
+import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
 
 /**
  *
@@ -33,7 +34,7 @@ public class NavigateToEventActivity extends FragmentActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigate_to_event);
         Intent data = getIntent();
-        String polyline = data.getStringExtra(ViewEventActivity.TRAFFIC_KEY_ROUTE_POINTS);
+        String polyline = data.getStringExtra(SmartCalendarFieldsLabel.TRAFFIC_KEY_ROUTE_POINTS);
 
         navigationRoute = SmartCalendarDirectionRouteModel.decodePolyLine(polyline);
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.smart_calendar_navigation_map);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +17,7 @@ import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
  * Created by elbaz on 18/04/2017.
  */
 
-public class SmartCalendarEventModel {
+public class SmartCalendarEventModel implements Serializable{
     private int event_id;
     private String titre;
     private String description;
@@ -130,6 +131,10 @@ public class SmartCalendarEventModel {
         this.dateFin = dateFin;
     }
 
+    public void setDateFin(Date dateFin) {
+        this.dateFin = dateFin.getTime();
+    }
+
     public int getOriginAddressId(){
         return this.origin_address_id;
     }
@@ -150,7 +155,7 @@ public class SmartCalendarEventModel {
         this.currentDate = currentDate;
     }
 
-    public static List<SmartCalendarEventModel> getSmartCalendarEvents(Context context){
+    /*public static List<SmartCalendarEventModel> getSmartCalendarEvents(Context context){
         //Database
         Cursor cursor = EvenementDAO.getEventList(context);
         ArrayList<SmartCalendarEventModel> events = new ArrayList<>();
@@ -167,5 +172,6 @@ public class SmartCalendarEventModel {
         }
 
         return events;
-    }
+    } */
+
 }

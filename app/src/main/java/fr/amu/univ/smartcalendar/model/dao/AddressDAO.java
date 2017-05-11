@@ -56,7 +56,22 @@ public class AddressDAO extends DatabaseDAO{
         return result;
     }
 
-    public boolean update(SmartCalendarAddressModel address){ return true; }
+    public boolean update(SmartCalendarAddressModel address){
+        ContentValues values = new ContentValues();
+        values.put(COL_EVENT_ID, address.getEventId());
+        values.put(COL_ALIAS, address.getAddressLabel());
+        values.put(COL_LATITUDE, address.getLatitude());
+        values.put(COL_LONGITUDE, address.getLongitude());
+        values.put(COL_ORIGIN, (address.isOrigin() ? 1 : 0));
+        values.put(COL_DESTINATION, (address.isDestination() ? 1 : 0));
+
+        String selection = COL_ID +  " = ?";
+
+        open();
+        int result = db.update(TABLE_NAME, values, selection, new String[]{String.valueOf(address.getAddressId())});
+        close();
+        return result > 0;
+    }
 
     public SmartCalendarAddressModel getAddressById(int addressId){
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = " + addressId;
@@ -80,7 +95,11 @@ public class AddressDAO extends DatabaseDAO{
         return null;
     }
 
-    public boolean delete(){
-        return true;
+    public boolean delete(int addressId){
+        String selection = COL_ID + " = ?";
+        open();
+        int result = db.delete(TABLE_NAME, selection, new String[]{String.valueOf(addressId)});
+        close();
+        return result > 0;
     }
 }

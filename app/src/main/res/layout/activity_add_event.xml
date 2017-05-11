@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/smart_calendar_event_description"
-                android:minLines="4"
+                android:minLines="2"
                 android:maxLines="6"
                 android:scrollbars="vertical"
                 android:gravity="top"
@@ -129,21 +129,24 @@
                     android:textStyle="bold" />
             </LinearLayout>
             <EditText
-                android:id="@+id/lieuDepart"
+                android:id="@+id/smart_calendar_departure_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:focusable="true"
                 android:inputType="textPersonName"
                 android:hint="@string/smart_calendar_departure_place_label"
-                android:onClick="onClickUpdateDeparturePosition"/>
+                />
+
             <EditText
                 android:id="@+id/smart_calendar_destination_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:focusable="true"
                 android:inputType="textPersonName"
-                android:hint="@string/smart_calendar_destination_place_label"
-                android:onClick="onClickUpdateDestinationPosition"/>
+                android:hint="@string/smart_calendar_destination_place_label"/>
+
         </LinearLayout>
     </ScrollView>
 

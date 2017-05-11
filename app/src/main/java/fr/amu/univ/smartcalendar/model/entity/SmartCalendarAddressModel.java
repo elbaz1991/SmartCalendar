@@ -15,9 +15,9 @@ public class SmartCalendarAddressModel{
 
     private String address_label;
 
-    private double longitude;
+    private double longitude = 0.0;
 
-    private double latitude;
+    private double latitude = 0.0;
 
     private int event_id;
 

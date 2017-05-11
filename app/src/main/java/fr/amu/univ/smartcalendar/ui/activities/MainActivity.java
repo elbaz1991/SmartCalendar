@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     openAddEvent.putExtra(SmartCalendarFieldsLabel.SELECTED_START_DATE, selectedDateDepart);
                 }
                 openAddEvent.putExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID, "0");
-                startActivity(openAddEvent);
+                startActivityForResult(openAddEvent, SmartCalendarFieldsLabel.REQUEST_EVENT_EDITION_CODE);
             }
         });
 
@@ -132,6 +132,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 loadMonthEvents();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch(requestCode){
+            case SmartCalendarFieldsLabel.REQUEST_EVENT_EDITION_CODE :
+                SmartCalendarEventModel localEvent = (SmartCalendarEventModel)data.getSerializableExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_OBJECT);
+                adapterRecyclerView.swapCalendarEvent(localEvent);
+                break;
+        }
     }
 
     @Override

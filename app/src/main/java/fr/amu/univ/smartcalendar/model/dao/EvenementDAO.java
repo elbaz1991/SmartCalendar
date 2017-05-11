@@ -67,18 +67,33 @@ public class EvenementDAO extends DatabaseDAO{
 
 
     /**
-     * @param e l'evenement à supprimer de la base
+     * @param eventId l'evenement à supprimer de la base
      */
-    public void delete(SmartCalendarEventModel e) {
-
+    public void delete(int eventId){
+        String selection = COL_ID + " = ?";
+        open();
+        int result = db.delete(TABLE_NAME, selection, new String[]{String.valueOf(eventId)});
+        close();
     }
 
 
     /**
-     * @param e l'evenement à modifer
+     * @param event l'evenement à modifer
      */
-    public boolean update(SmartCalendarEventModel e) {
-        return true;
+    public boolean update(SmartCalendarEventModel event) {
+        ContentValues values = new ContentValues();
+        values.put(COL_TITRE, event.getTitre());
+        values.put(COL_DESC, event.getDescription());
+        values.put(COL_DATE_DEBUT , event.getDateDebut());
+        values.put(COL_DATE_FIN, event.getDateFin());
+
+        String selection = COL_ID + " = ?";
+
+        open();
+        int result = db.update(TABLE_NAME, values, selection, new String[]{String.valueOf(event.getEventId())});
+        close();
+
+        return result > -1;
     }
 
     public void updateIntField(int eventId, String field, int value){
@@ -322,10 +337,10 @@ public class EvenementDAO extends DatabaseDAO{
         close();
         return null;
     }
-
+/*
     public static Cursor getEventList(Context context){
         String[] columns = {EvenementDAO.COL_ID, EvenementDAO.COL_TITRE, EvenementDAO.COL_DESC};
         return getList(context, EvenementDAO.TABLE_NAME, columns);
-    }
+    }*/
 
 }

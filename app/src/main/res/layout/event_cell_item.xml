@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/colorCellBack"
-    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    android:paddingTop="4dp"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="84dp">
     <LinearLayout
         android:id="@+id/smart_calendar_event_cell_start_date_wrapper"
         android:layout_width="60dp"
@@ -76,4 +76,13 @@
         android:src="@drawable/pencil"
         android:layout_width="20dp"
         android:layout_height="20dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/smart_calendar_event_cell_edit"
+        android:layout_margin="4dp"
+        android:paddingTop="4dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/darker_gray"
+        />
 </RelativeLayout>
