@@ -2,7 +2,7 @@ package fr.amu.univ.smartcalendar.utils;
 
 import android.util.Log;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
@@ -26,10 +26,14 @@ public class SmartCalendarDateUtils {
 
     public SmartCalendarDateUtils(long timeStamp){
         Date date = new Date(timeStamp);
+        day = Integer.parseInt(SmartCalendarDateFormat.getEventNumDay(date));
+        Log.d("DEBUG", "la date " + SmartCalendarDateFormat.dateFormatMonth(date));
+        //month = Integer.parseInt(SmartCalendarDateFormat.dateFormatMonth(date));
+        //year = Integer.parseInt(SmartCalendarDateFormat.)
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        month = calendar.get(Calendar.MONTH);
+        //day = calendar.get(Calendar.DAY_OF_MONTH);
+        //month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
         hour = calendar.get(Calendar.HOUR);

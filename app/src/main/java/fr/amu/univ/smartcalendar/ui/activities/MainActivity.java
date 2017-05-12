@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadMonthEvents(){
         List<SmartCalendarEventModel> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
 
-        if(allEventsDate.size() > 0) {
+        if(allEventsDate != null && allEventsDate.size() > 0) {
             compactCalendarView.removeAllEvents();
             for (SmartCalendarEventModel eventData : allEventsDate) {
                 //compactCalendarView.addEvent(new Event(Color.RED, dateEvent, ""));

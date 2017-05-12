@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 public class SmartCalendarDateFormat {
     private static SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy");
-
+    //private static SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy");
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd - MMMM - yyyy");
     private static SimpleDateFormat dateFormatYearMonthDay = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat dateFormatEventNumDay = new SimpleDateFormat("dd");

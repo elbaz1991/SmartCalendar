@@ -32,6 +32,7 @@ import fr.amu.univ.smartcalendar.plugins.weather.api.SmartCalendarWeatherCallBac
 import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
 import fr.amu.univ.smartcalendar.plugins.weather.models.SmartCalendarWeatherModel;
 import fr.amu.univ.smartcalendar.ui.constants.SmartCalendarFieldsLabel;
+import fr.amu.univ.smartcalendar.utils.SmartCalendarDateFormat;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
 import fr.amu.univ.smartcalendar.utils.SmartCalendarUtils;
 
@@ -54,7 +55,12 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
 
     private Intent paramsReader = null;
 
-    private TextView activity_title;
+    private TextView smartCalendarEventTitle;
+    private TextView smartCalendarEventDescription;
+    private TextView smartCalendarEventStartDate;
+    private TextView smartCalendarEventStartTime;
+    private TextView smartCalendarEventEndDate;
+    private TextView smartCalendarEventEndTime;
 
     private TextView activityDayOfWeek;
     private TextView activityTemperature;
@@ -67,8 +73,8 @@ public class ViewEventActivity extends Activity implements SmartCalendarGoogleDi
 
 
 
-    LatLng source , destination; /*= new LatLng(43.299847, 5.385218);
-    LatLng destination = new LatLng(43.231412, 5.437300) ; */
+    LatLng source = new LatLng(43.338029, 5.410414);
+    LatLng destination = new LatLng(43.231412, 5.437300) ;
 
 
     @Override
@@ -130,28 +136,44 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
 
     public void renderActivity(){
         setContentView(R.layout.activity_view_event);
-        activity_title = (TextView) findViewById(R.id.smart_calendar_view_activity_title);
+        smartCalendarEventTitle = (TextView) findViewById(R.id.smart_calendar_view_activity_title);
+        smartCalendarEventDescription = (TextView)findViewById(R.id.smart_calendar_view_activity_description);
+        smartCalendarEventStartDate = (TextView)findViewById(R.id.smart_calendar_view_activity_start_on);
+        smartCalendarEventStartTime = (TextView)findViewById(R.id.smart_calendar_view_activity_start_at);
+        smartCalendarEventEndDate = (TextView)findViewById(R.id.smart_calendar_view_activity_ends_on);
+        smartCalendarEventEndTime = (TextView)findViewById(R.id.smart_calendar_view_activity_ends_at);
 
         smartCalendarDirectionItems = (LinearLayout) findViewById(R.id.smart_calendar_direction_items);
 
         paramsReader = getIntent();
         int eventId = Integer.parseInt(paramsReader.getStringExtra(SmartCalendarFieldsLabel.SMART_CALENDAR_EVENT_ID));
         //smartCalendarEvent = (SmartCalendarActivityModel) paramsReader.getParcelableExtra("calendar_activity");
-        if (eventId > 0) {Log.d("DEBUG", "event id " + eventId);
+        if (eventId > 0) {
             smartCalendarEvent = new SmartCalendarEventModel(this, eventId);
             originAddress = new SmartCalendarAddressModel(this, smartCalendarEvent.getOriginAddressId());
             destinationAddress = new SmartCalendarAddressModel(this, smartCalendarEvent.getDestinationAddressId());
 
+            smartCalendarEventTitle.setText(smartCalendarEvent.getTitre());
+            smartCalendarEventDescription.setText(smartCalendarEvent.getDescription());
+            /*smartCalendarEventStartDate.setText(
+                    SmartCalendarDateFormat.getDateFormatYearMonthDay(smartCalendarEvent.getDateDebut()));
+            //smartCalendarEvent.setText(smartCalendarEvent.get());
+            //smartCalendarEvent.setText(smartCalendarEvent.get());
+
+            /* add data  **/
             renderWeather();
             renderDirectionProposal();
         } else {
             //We can't display unavailable activities their for redirect user to the activity creation page.
         }
 
+        /*source = new LatLng(43.299847, 5.385218);
+        destination = new LatLng(43.231412, 5.437300) ;*/
+
     }
 
     private void renderWeather(){
-        destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
+        //destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
         SmartCalendarWeather.createWithServerKey(SmartCalendarFieldsLabel.WEATHER_API_SERVER_KEY).setDestination(destination).execute(this);
     }
 
@@ -222,8 +244,8 @@ ind++; Log.d("DEBUG", "context. coction" + ind);
 
 
     private void renderDirectionProposal(){
-        destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
-        source = new LatLng(originAddress.getLatitude(), originAddress.getLongitude());
+        /*destination = new LatLng(destinationAddress.getLatitude(), destinationAddress.getLongitude());
+        source = new LatLng(originAddress.getLatitude(), originAddress.getLongitude()); */
         SmartCalendarDirection.createWithServerKey(SmartCalendarFieldsLabel.DIRECTION_API_SERVER_KEY).setOrigin(source)
                 .setDestination(destination).setTransportMode(transportMode)
                 .setAlternativeRoute(true).execute(this);

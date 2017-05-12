@@ -25,10 +25,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.model.LatLng;
+
 
 import fr.amu.univ.smartcalendar.R;
 import java.text.SimpleDateFormat;
@@ -302,8 +299,21 @@ public class AddEventActivity extends AppCompatActivity {
 
             if (event.getEventId() > 0) {
                 result &= evenementDAO.update(event);
-                result &= addressDAO.update(departureAddress);
-                result &= addressDAO.update(destinationAddress);
+                departureAddress.setEventId(event.getEventId());
+                long insertAddressId;
+                if(departureAddress.getAddressId() > 0) {
+                    result &= addressDAO.update(departureAddress);
+                }else{
+                    insertAddressId = addressDAO.insert(destinationAddress);
+                    result &= (insertAddressId > -1);
+                }
+                destinationAddress.setEventId(event.getEventId());
+                if(destinationAddress.getAddressId() > 0) {
+                    result &= addressDAO.update(destinationAddress);
+                }else{
+                    insertAddressId = addressDAO.insert(destinationAddress);
+                    result &= (insertAddressId > 0);
+                }
                 result &= participantDAO.update(participants);
 
             } else {

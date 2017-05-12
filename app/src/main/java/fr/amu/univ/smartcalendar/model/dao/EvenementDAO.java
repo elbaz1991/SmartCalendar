@@ -239,7 +239,9 @@ public class EvenementDAO extends DatabaseDAO{
                 "(SELECT strftime('%m',(SELECT datetime(dateDebut, 'unixepoch', 'localtime'))))" +
                 " = (SELECT strftime('%m','"+month+"'))" + * /
                 "ORDER BY dateDebut ASC)"; */
-        String query = "SELECT * FROM " + TABLE_NAME ;
+        String query = "SELECT * FROM " + TABLE_NAME; /* + " WHERE '" + SmartCalendarDateFormat.getDateFormatYearMonthDay(date) +
+                "' BETWEEN date(datetime(" + COL_DATE_DEBUT + ", 'unixepoch', 'localtime')) AND date(datetime(" + COL_DATE_FIN +
+                ", 'unixepoch', 'localtime'))"; */
 
 
 
