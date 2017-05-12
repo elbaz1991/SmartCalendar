@@ -161,6 +161,40 @@ public class EvenementDAO extends DatabaseDAO{
 
     /**
      * @author elbaz
+     *@return renvoi tout les évènements par mois
+     */
+    public List<Evenement> findByMonthAndYear(int month) {
+        List<Evenement> li = new ArrayList<>();
+        String query = "SELECT * FROM Evenement \n" +
+                "WHERE \n" +
+                "CAST ( (SELECT strftime('%m',(SELECT datetime(dateDebut, 'unixepoch', 'localtime')))) AS INTEGER)  = "+month+"\n" +
+                "ORDER BY dateDebut ASC";
+        open();
+        Cursor cursor = db.rawQuery(query,null);
+        // si la table est vide
+        if(cursor.getCount() == 0)
+            return null;
+        //Log.e("DATA",String.valueOf(cursor.getCount()));
+
+        Evenement event;
+        while (cursor.moveToNext()){
+            event = new Evenement();
+            event.setTitre(cursor.getString(cursor.getColumnIndex(COL_TITRE)));
+            Calendar d = Calendar.getInstance();
+            d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_DEBUT)));
+            event.setDateDebut(d);
+            d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
+            event.setDateFin(d);
+            event.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLEUR)));
+            li.add(event);
+        }
+        close();
+        return li;
+    }
+
+
+    /**
+     * @author elbaz
      * @param idEvent
      *@return renvoi l'évènement par id
      */
@@ -182,13 +216,15 @@ public class EvenementDAO extends DatabaseDAO{
             event.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESC)));
             d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_DEBUT)));
             event.setDateDebut(d);
-
             d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
             event.setDateFin(d);
             event.setAdresseDepart(adresseDAO.findByAdresseId(cursor.getString(cursor.getColumnIndex(COL_ADRESSE_DEPART))));
             event.setAdresseRdv(adresseDAO.findByAdresseId(cursor.getString(cursor.getColumnIndex(COL_ADRESSE_RDV))));
             event.setDateFin(d);
             event.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLEUR)));
+            event.setMoyenneDeTransport(cursor.getString(cursor.getColumnIndex(COL_MOYENNE_TRANSPORT)));
+            event.setRappel1(cursor.getInt(cursor.getColumnIndex(COL_RAPPEL_1)));
+            event.setRappel2(cursor.getInt(cursor.getColumnIndex(COL_RAPPEL_2)));
 
         }
 
@@ -439,20 +475,20 @@ public class EvenementDAO extends DatabaseDAO{
 
     /**
      * @author elbaz
-     * @param date pour retourner les évènements du mois passé en paramètre
+     * @param month pour retourner les évènements du mois passé en paramètre
      * @return cette methode retourne la liste des dates(long) des évènements sans doublant
      * pour construire la cellule global qui va contenir les évènements de chaque jour
      */
-    public List<Long> findDistinctMonthEvents(Date date){
-        String month = DateFormater.dateFormatYyMmDd(date);
+    public List<Long> findDistinctMonthEvents(int month){
+        //String dateMonth = DateFormater.dateFormatYyMmDd(date);
         /* Requete pour recuperer les dates des evenemement sans doublant*/
         String query = "SELECT strftime('%s',distinctDate) FROM " +
                 "(SELECT DISTINCT date(datetime(dateDebut, 'unixepoch', 'localtime')) AS distinctDate " +
                 "FROM Evenement " +
                 "WHERE " +
-                "(SELECT strftime('%m',(SELECT datetime(dateDebut, 'unixepoch', 'localtime'))))" +
-                " = (SELECT strftime('%m','"+month+"'))" +
-                "ORDER BY dateDebut ASC)";
+                "CAST ( (SELECT strftime('%m',(SELECT datetime(dateDebut, 'unixepoch', 'localtime')))) AS INTEGER)" +
+                "  = "+month+
+                " ORDER BY dateDebut ASC)";
 
         List<Long> li = new ArrayList<>();
         open();

@@ -27,14 +27,6 @@
     <string name="text_couleur_orange">  Orange </string>
 
 
-
-
-
-
-
-
-
-
     <string-array name="rappelList">
         <item>Auccun</item>
         <item>Au moment du rendez-vous</item>
@@ -57,13 +49,16 @@
     </string-array>
 
 
-
-
-
     <string name="add_event_touteLaJournee">Toute la journée</string>
     <string name="sans_titre">(Pas de titre)</string>
 
 
-
-
+    <string name="action_today">Aujourd\'hui</string>
+    <string name="action_day_view">Jour</string>
+    <string name="action_three_day_view">3 Jours</string>
+    <string name="action_week_view">Semaines</string>
+    <string name="title_activity_basic"></string>
+    <string name="title_activity_asynchronous">Asynchronous Events</string>
+    <string name="async_error">Could not download events from the internet</string>
+    <string name="title_activity_multiple_view">Smart Calendar</string>
 </resources>

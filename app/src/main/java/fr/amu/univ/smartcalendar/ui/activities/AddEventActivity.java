@@ -246,6 +246,8 @@ public class AddEventActivity extends AppCompatActivity {
                         public void onDateSet(DatePicker datePicker, int annee, int mois, int jours) {
                             dateDebut.set(annee,mois,jours);
                             ui_dateDebut.setText(simpleDateFormat.format(dateDebut.getTime()));
+                            dateFin.set(annee,mois,jours);
+                            ui_dateFin.setText(simpleDateFormat.format(dateFin.getTime()));
                         }
                     }
                     ,annee,mois,jour);
@@ -259,8 +261,14 @@ public class AddEventActivity extends AppCompatActivity {
                     DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int annee, int mois, int jours) {
-                            dateFin.set(annee,mois,jours);
-                            ui_dateFin.setText(simpleDateFormat.format(dateFin.getTime()));
+                            Calendar temp =  (Calendar) dateFin.clone();
+                            temp.set(annee, mois, jours);
+                            if(temp.getTimeInMillis() >= dateDebut.getTimeInMillis()) {
+                                dateFin.set(annee, mois, jours);
+                                ui_dateFin.setText(simpleDateFormat.format(dateFin.getTime()));
+                            }else{
+                                Toast.makeText(AddEventActivity.this,"La date de fin doit être superieur à la date de debut",Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                     ,annee,mois,jour);
@@ -277,6 +285,10 @@ public class AddEventActivity extends AppCompatActivity {
                             dateDebut.set(Calendar.HOUR_OF_DAY,heure);
                             dateDebut.set(Calendar.MINUTE,minute);
                             ui_heureDebut.setText(simpleHeureFormat.format(dateDebut.getTime()));
+
+                            dateFin.set(Calendar.HOUR_OF_DAY,heure + 1);
+                            dateFin.set(Calendar.MINUTE,minute);
+                            ui_heureFin.setText(simpleHeureFormat.format(dateFin.getTime()));
                         }
                     },heure,minutes,true);
 
@@ -290,10 +302,19 @@ public class AddEventActivity extends AppCompatActivity {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int heure, int minute) {
                             timePicker.setIs24HourView(true);
-                            dateFin.set(Calendar.HOUR_OF_DAY,heure);
-                            dateFin.set(Calendar.MINUTE,minute);
-                            ui_heureFin.setText(simpleHeureFormat.format(dateFin.getTime()));
-                        }
+
+                            Calendar temp =  (Calendar) dateFin.clone();
+                            temp.set(Calendar.HOUR_OF_DAY,heure);
+                            temp.set(Calendar.MINUTE,minute);
+                            if(temp.getTimeInMillis() >= dateDebut.getTimeInMillis()) {
+                                dateFin.set(Calendar.HOUR_OF_DAY,heure);
+                                dateFin.set(Calendar.MINUTE,minute);
+                                ui_heureFin.setText(simpleHeureFormat.format(dateFin.getTime()));
+
+                            }else{
+                                Toast.makeText(AddEventActivity.this,"La date de fin doit être superieur à la date de debut",Toast.LENGTH_LONG).show();
+                            }
+                                  }
                     },heure,minutes,true);
                     timePickerDialog.show();
                 }

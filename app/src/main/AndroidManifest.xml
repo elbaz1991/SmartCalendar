@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.amu.univ.smartcalendar">
 
-
-    <!-- PlacePicker requires the ACCESS_FINE_LOCATION permission and a geo API key.
+    <!--
+         PlacePicker requires the ACCESS_FINE_LOCATION permission and a geo API key.
          See this page for more information on how to obtain an API key:
          https://developers.google.com/places/documentation/android/start
     -->
@@ -23,10 +23,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC51Geal-SSuFwRgxkITq9QbTz-l_GSOZo" />
+            android:value="AIzaSyC7Vv5az8gxHkOY3YdV2a8GNqcrNSFVCTk" />
 
         <activity
             android:name=".ui.activities.MainActivity"
@@ -34,15 +33,32 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.activities.AddEventActivity"
             android:label="@string/title_activity_add_event"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.activities.multiple.view.BasicActivity"
+            android:label="@string/title_activity_multiple_view"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
+
+        <activity
+            android:name=".ui.activities.MapsActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+
+        <activity
+            android:name=".ui.activities.DetailsEventActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

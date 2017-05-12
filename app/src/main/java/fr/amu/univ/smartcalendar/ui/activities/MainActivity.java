@@ -172,9 +172,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
         if (id == R.id.action_settings) {
             return true;
         }
+        */
 
         return super.onOptionsItemSelected(item);
     }
@@ -192,10 +194,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -265,6 +263,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /*
     private void loadMonthEvents(){
         List<Long> allEventsDate = evenementDAO.findAllEventsByMonth(compactCalendarView.getFirstDayOfCurrentMonth());
         if(allEventsDate != null) {
@@ -276,6 +275,7 @@ public class MainActivity extends AppCompatActivity
         List<Long> distinctEventsDate = evenementDAO.findDistinctMonthEvents(compactCalendarView.getFirstDayOfCurrentMonth());
         adapterRecyclerView.setmDataSet(distinctEventsDate);
     }
+    */
 
 }
 

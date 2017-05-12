@@ -24,6 +24,18 @@ public class EventViewAdapter{
     }
 
 
+    public String formatTitre(String titre){
+        String titreResult = "";
+        if(titre.equals(""))
+            titreResult =  context.getString(R.string.sans_titre);
+        else
+            titreResult = titre;
+
+        return titreResult;
+    }
+
+
+
     public String formatTitre(String titre,long dateDebut,long dateFin,long currentDate){
         String titreResult = "";
         if(titre.equals(""))
@@ -38,7 +50,7 @@ public class EventViewAdapter{
         if(getDifferenceDays(dateDebut,dateFin) > 0){
             long durreRdv = getDifferenceDays(dateDebut,dateFin) +1;
             Log.e("Date",": "+currentDate);
-            long difference = getDifferenceDays(dateDebut,currentDate) +1 ;
+            long difference = durreRdv - getDifferenceDays(currentDate,dateFin) ;
             titreResult = titreResult + " (jour "+difference +"/"+ durreRdv +")";
         }
 

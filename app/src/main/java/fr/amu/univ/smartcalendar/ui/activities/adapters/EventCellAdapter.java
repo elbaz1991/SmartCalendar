@@ -1,19 +1,14 @@
 package fr.amu.univ.smartcalendar.ui.activities.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.amu.univ.smartcalendar.ui.activities.multiple.view.BasicActivity;
 import fr.amu.univ.smartcalendar.outils.DateFormater;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
@@ -118,7 +114,13 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
             cell.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(),view.getTag().toString(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(view.getContext(),view.getTag().toString(),Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(mainActivity.getApplicationContext(), BasicActivity.class);
+                    intent.putExtra("date",Long.valueOf(view.getTag().toString()));
+                    mainActivity.startActivity(intent);
+
+
                 }
             });
 
@@ -126,9 +128,8 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
         }
 
         public void layoutForEvent(final EventHolder holder, Long dateEvent){
-            Log.e("Execute","Yeeeeeeeeeeeees");
-            String currentMonth = DateFormater.dateFormatMonthYear(new Date(dateEvent));
 
+            String currentMonth = DateFormater.dateFormatMonthYear(new Date(dateEvent));
             holder.itemView.setTag(dateEvent);
 
 
@@ -158,7 +159,7 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
                 holder.ui_cell_eventNameDay.setTextColor(color);
             }
 
-            holder.adapterContentRecyclerView = new EventCellContentAdapter(holder.itemView.getContext(),EventCellAdapter.this);
+            holder.adapterContentRecyclerView = new EventCellContentAdapter(holder.itemView.getContext(),EventCellAdapter.this,mainActivity);
             holder.ui_eventContentRecyclerView.setAdapter(adapterContentRecyclerView);
             holder.adapterContentRecyclerView.setmDataSet(evenementDAO.findByDateEvent(new Date(dateEvent)));
             holder.ui_eventContentRecyclerView.getAdapter().notifyDataSetChanged();

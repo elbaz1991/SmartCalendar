@@ -44,7 +44,8 @@
                     android:drawableRight="@drawable/ic_save_white"
                     android:gravity="center_vertical"
                     android:layout_marginRight="10dp"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    />
 
 
             </RelativeLayout>
@@ -54,10 +55,5 @@
 
     <include layout="@layout/content_add_event" />
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AutoCompleteTextView" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,7 +1,9 @@
 package fr.amu.univ.smartcalendar.ui.activities.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.entity.Evenement;
+import fr.amu.univ.smartcalendar.ui.activities.DetailsEventActivity;
 
 
 /**
@@ -31,11 +34,13 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
     private LayoutInflater mInflater;
     private EventViewAdapter eventViewAdapter;
     private EventCellAdapter eventCellAdapter;
+    private Activity mainActivity;
 
-    public EventCellContentAdapter(Context context,EventCellAdapter eventCellAdapter){
+    public EventCellContentAdapter(Context context,EventCellAdapter eventCellAdapter,Activity mainActivity){
         mInflater = LayoutInflater.from(context);
         eventViewAdapter = new EventViewAdapter(context);
         this.eventCellAdapter = eventCellAdapter;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -105,7 +110,12 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
            holder.ui_cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(),"cell clicked : "+holder.itemView.getTag(),Toast.LENGTH_SHORT).show();
+               //      Toast.makeText(view.getContext(),"cell clicked : "+holder.itemView.getTag(),Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(holder.itemView.getContext(), DetailsEventActivity.class);
+                    intent.putExtra("idEvenement",(int)holder.itemView.getTag());
+
+                    mainActivity.startActivity(intent);
                 }
             });
 
@@ -146,6 +156,14 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
                         public void onClick(DialogInterface dialog, int which) {
                             holder.ui_swipe_layout.close(true);
                             dialog.dismiss();
+                        }
+                    });
+
+                    alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            holder.ui_swipe_layout.close(true);
+                            dialogInterface.dismiss();
                         }
                     });
 

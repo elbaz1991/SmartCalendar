@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="fr.amu.univ.smartcalendar.ui.activities.AddEventActivity"
+    tools:showIn="@layout/activity_add_event"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:verticalScrollbarPosition="right">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhiteSmoke"
+    >
+
+    <LinearLayout
+        android:id="@+id/couleurDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorVert"
+
+
+        >
+
+        <TextView
+            android:id="@+id/textViewRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:drawableLeft="@drawable/ic_retour"
+            android:drawableRight="@drawable/ic_delete"
+            android:drawablePadding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            />
+
+
+        <TextView
+            android:id="@+id/detailsTitre"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Titre de l'Evenement"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="26dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
+        />
+        <TextView
+            android:id="@+id/textViewModifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_edit"
+            android:drawablePadding="10dp"
+            android:layout_marginRight="10dp"
+
+            />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+
+
+        >
+
+        <TextView
+            android:id="@+id/DetailsDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DESCRIPTION : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_description"
+            android:drawablePadding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/DetailsDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="texte de la description texte de la description texte de la description texte de la description "
+            android:layout_marginLeft="5dp"
+            android:textColor="#000"
+            android:textSize="12dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        >
+
+        <TextView
+            android:id="@+id/DetailsLeJour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" DATE : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_time"
+            android:drawablePadding="5dp"
+            android:layout_marginLeft="10dp"
+
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/DetailsTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jeudi 4 mai à 12:00 - Jeudi 11 mai à 20:00"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        >
+
+        <TextView
+            android:id="@+id/DetailsLieux"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" DEPART - ARRIVE : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_lieu"
+            android:layout_marginLeft="10dp"
+            android:drawablePadding="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/DetailsLieuDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marseille - France"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"/>
+        <TextView
+            android:id="@+id/DetailsLieuArrive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Barcelone - Espagne"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        >
+
+        <TextView
+            android:id="@+id/DetailsMoyenDeTrans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MOYEN DE TRANSPORT : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_moyentrans"
+            android:drawablePadding="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            />
+
+
+        <TextView
+            android:id="@+id/DetailsMoyenDeTransport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VOITURE"
+            android:textColor="#000"
+            android:drawablePadding="10dp"
+            android:layout_marginLeft="30dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutMap"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:orientation="vertical"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:focusable="false"
+        >
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        >
+
+        <TextView
+            android:id="@+id/DetailsRappels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RAPPELS : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_rappel"
+            android:drawablePadding="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            />
+
+
+        <TextView
+            android:id="@+id/DetailsRappel1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Avant 10 minutes"
+            android:textColor="#000"
+            android:layout_marginLeft="30dp"/>
+        <TextView
+            android:id="@+id/DetailsRappel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Avant 30 minutes"
+            android:textColor="#000"
+            android:layout_marginLeft="30dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        >
+
+        <TextView
+            android:id="@+id/DetailsInvite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" INVITES : "
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/ic_messagecontact"
+            android:drawablePadding="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/DetailsEmails1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="rahim.toubi@hotmail.fr"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"
+            />
+        <TextView
+            android:id="@+id/DetailsEmails2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="rahim.toubi@hotmail.fr"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"
+           />
+    </LinearLayout>
+
+
+</LinearLayout>
+</ScrollView>

@@ -25,6 +25,7 @@ public class DateFormater {
 
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return date au format MMMM - yyyy
      */
@@ -35,6 +36,7 @@ public class DateFormater {
 
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return date au format dd - MMMM - yyyy
      */
@@ -45,6 +47,7 @@ public class DateFormater {
 
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return date au format yy-MM-dd  exemple -> 2017-12-24
      */
@@ -53,6 +56,7 @@ public class DateFormater {
     }
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return le mois à partir d'une date
      */
@@ -65,6 +69,7 @@ public class DateFormater {
 
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return le jour correspondant à la date ex 05-12-2017 -> la fonction renvoi 05
      */
@@ -73,6 +78,7 @@ public class DateFormater {
     }
 
     /**
+     * @author elbaz
      * @param date à transformer
      * @return le nom du jour correspondant à la date ex 05-12-2017 -> la fonction renvoi lun.
      */
@@ -82,7 +88,7 @@ public class DateFormater {
     }
 
 
-    /**
+    /**@author elbaz
      * @param date à formater
      * @return extraire l'heure d'une date
      */
@@ -95,7 +101,7 @@ public class DateFormater {
     }
 
 
-    /**
+    /**@author elbaz
      * @param date à transformer
      * @return date au format MMMM yyyy
      */
@@ -105,6 +111,11 @@ public class DateFormater {
     }
 
 
+    /**@author elbaz
+     * @param d1 la première date
+     * @param d2 la deuxième date
+     * @return la différence en jours entre les deux dates
+     */
     public static long getDifferenceDays(long d1, long d2) {
         long diff = d2 - d1;
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
