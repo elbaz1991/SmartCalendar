@@ -129,10 +129,23 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
 
         public void layoutForEvent(final EventHolder holder, Long dateEvent){
 
-            String currentMonth = DateFormater.dateFormatMonthYear(new Date(dateEvent));
+            String currentMonth = DateFormater.dateFormatMMMMyyyy(new Date(dateEvent));
+            int currentDay = DateFormater.getDay(dateEvent);
             holder.itemView.setTag(dateEvent);
 
 
+            if(currentDay == 1){
+                setBackgroundMonth(new Date(dateEvent).getMonth() + 1,holder.ui_cell_eventMonth);
+                holder.ui_cell_eventMonth.setText(currentMonth);
+                holder.ui_cell_eventMonth.setVisibility(View.VISIBLE);
+                holder.ui_cell_eventMonth.setClickable(false);
+            }else{
+                holder.ui_cell_eventMonth.setBackground(null);
+                holder.ui_cell_eventMonth.setText(null);
+                holder.ui_cell_eventMonth.setVisibility(View.GONE);
+            }
+
+            /*
             if(mapUniqueMonth != null && mapUniqueMonth.size() == 0)
                 loadMap();
 
@@ -145,6 +158,7 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
                 holder.ui_cell_eventMonth.setText(null);
                 holder.ui_cell_eventMonth.setVisibility(View.GONE);
             }
+            */
 
 
             holder.ui_cell_eventNumDay.setText(DateFormater.getEventNumDay(new Date(dateEvent)));
@@ -159,6 +173,8 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
                 holder.ui_cell_eventNameDay.setTextColor(color);
             }
 
+
+
             holder.adapterContentRecyclerView = new EventCellContentAdapter(holder.itemView.getContext(),EventCellAdapter.this,mainActivity);
             holder.ui_eventContentRecyclerView.setAdapter(adapterContentRecyclerView);
             holder.adapterContentRecyclerView.setmDataSet(evenementDAO.findByDateEvent(new Date(dateEvent)));
@@ -166,14 +182,6 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
 
 
 
-            /*
-            holder.ui_deleteLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Toast.makeText(holder.itemView.getContext(),"Yees",Toast.LENGTH_SHORT).show();
-                }
-            });
-            */
 
         }
 
@@ -209,7 +217,8 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
 
     private void loadMap(){
         mapUniqueMonth.clear();
-        List<Long> li = evenementDAO.findDistinctAllEvents();
+        //List<Long> li = evenementDAO.findDistinctAllEvents();
+        List<Long> li =loadAllEvents();
         Calendar c = Calendar.getInstance();
         String currentMonth;
 
@@ -229,10 +238,29 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
         evenementDAO.delete(idEvent);
         mainActivity.loadAllEvents();
         loadMap();
-        /*mDataSet = evenementDAO.findDistinctAllEvents();
-        loadMap();
-        notifyDataSetChanged();
-        */
+    }
+
+    public List<Long> loadAllEvents(){
+        List<Long> dates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        int startYear = calendar.get(Calendar.YEAR) +1;
+        calendar.set(Calendar.MONTH,Calendar.JANUARY );
+        calendar.set(Calendar.DAY_OF_YEAR,0);
+        for(int i = 1;i<365;i++){
+            calendar.set(Calendar.DAY_OF_YEAR,i);
+            //calendar.add(Calendar.DATE,i);
+            dates.add(calendar.getTimeInMillis());
+        }
+        return dates;
+        //adapterRecyclerView.setmDataSet(dates);
+    }
+
+    public int getDatePosition(long date){
+        for(int i =0;i<=mDataSet.size();i++){
+            if(mDataSet.get(i) == date)
+                return i;
+        }
+        return 0;
     }
 
 

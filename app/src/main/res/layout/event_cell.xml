@@ -4,13 +4,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp"
+    android:elevation="0dp"
     android:layout_margin="0dp"
     app:cardCornerRadius="0dp"
     android:padding="4dp"
     app:cardBackgroundColor="@color/colorCellBack"
     >
-
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,9 +18,9 @@
         <TextView
             android:id="@+id/eventMonth"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:visibility="gone"
-            android:textSize="23dp"
+            android:textSize="27dp"
             android:textStyle="bold"
             android:fontFamily="casual"
             android:textColor="#000"
@@ -30,7 +29,15 @@
             android:gravity="center"
             android:alpha="0.9"
             android:clickable="false"
-         />
+            />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -75,7 +82,7 @@
 
 </LinearLayout>
 
-
+</LinearLayout>
 
 
 </android.support.v7.widget.CardView>

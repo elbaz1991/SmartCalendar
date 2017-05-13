@@ -19,6 +19,8 @@ public class DateFormater {
     private static SimpleDateFormat dateFormatEventNumDay = new SimpleDateFormat("dd");
     private static SimpleDateFormat dateFormatEventNameDay = new SimpleDateFormat("EEE");
     private static SimpleDateFormat dateFormatddMM = new SimpleDateFormat("dd MMMM");
+    private static SimpleDateFormat dateFormatMMMMyyyy = new SimpleDateFormat("MMMM yyyy");
+    private static SimpleDateFormat dateFormatdd = new SimpleDateFormat("dd");
 
     private static SimpleDateFormat heureFormat = new SimpleDateFormat("HH:mm");
     private static Calendar calendar = Calendar.getInstance();
@@ -100,6 +102,11 @@ public class DateFormater {
         return dateFormatddMM.format(date);
     }
 
+    public static String dateFormatMMMMyyyy(Date date){
+        String result =  dateFormatMMMMyyyy.format(date);
+        return result.substring(0,1).toUpperCase() + result.substring(1);
+    }
+
 
     /**@author elbaz
      * @param date à transformer
@@ -119,6 +126,25 @@ public class DateFormater {
     public static long getDifferenceDays(long d1, long d2) {
         long diff = d2 - d1;
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+
+    /**@author elbaz
+     *
+     */
+    public static long getDateWithoutTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        return calendar.getTimeInMillis();
+    }
+
+    public static int getDay(long date){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
+        return Integer.valueOf(dateFormatdd.format(c.getTime()));
     }
 }
 

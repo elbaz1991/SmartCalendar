@@ -5,6 +5,7 @@ package fr.amu.univ.smartcalendar.ui.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +66,8 @@ public class MainActivity extends AppCompatActivity
 
     private EvenementDAO evenementDAO = new EvenementDAO(this);
     private Calendar calendar = Calendar.getInstance();
+    private LinearLayoutManager layoutManagerRecyclerView;
+    private static int firstVisibleInListview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,26 +81,24 @@ public class MainActivity extends AppCompatActivity
         /* Création du calendrier */
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
-        //compactCalendarView.setLocale(TimeZone.getDefault(),Locale.FRANCE);
+
+
+        selectedDateDepart = DateFormater.getDateWithoutTime();
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
 
             @Override
             public void onDayClick(Date dateClicked) {
                 selectedDateDepart = dateClicked.getTime();
-                LinearLayoutManager layoutManager = (LinearLayoutManager) ui_eventListRecyclerView
-                        .getLayoutManager();
-                //layoutManager.scrollToPosition()
-                //loadDayEvents(dateClicked);
-
-                //Toast.makeText(getApplicationContext(),DateFormater.dateFormat(dateClicked),Toast.LENGTH_SHORT).show();
-            }
+                layoutManagerRecyclerView.scrollToPositionWithOffset(adapterRecyclerView.getDatePosition(dateClicked.getTime()), 0);
+                }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 getSupportActionBar().setTitle(DateFormater.dateFormatMonth(firstDayOfNewMonth));
-                //loadMonthEvents();
-                //Toast.makeText(getApplicationContext(),String.valueOf(DateFormater.getMonthFromTime(firstDayOfNewMonth)),Toast.LENGTH_SHORT).show();
-                //loadMonthEvents();
+                selectedDateDepart = firstDayOfNewMonth.getTime();
+                layoutManagerRecyclerView.scrollToPositionWithOffset(adapterRecyclerView.getDatePosition(firstDayOfNewMonth.getTime()),0);
+
+
             }
 
         });
@@ -132,15 +135,48 @@ public class MainActivity extends AppCompatActivity
         ui_eventListRecyclerView.setAdapter(adapterRecyclerView);
 
 
-        /*
+        layoutManagerRecyclerView = (LinearLayoutManager) ui_eventListRecyclerView.getLayoutManager();
+        firstVisibleInListview = layoutManagerRecyclerView.findFirstVisibleItemPosition();
+
+
         ui_eventListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                loadMonthEvents();
+
+                int currentFirstVisible = layoutManagerRecyclerView.findFirstVisibleItemPosition();
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(selectedDateDepart);
+                if (dy > 0) {
+                    if(currentFirstVisible > firstVisibleInListview) {
+                        c.add(Calendar.DATE,1);
+                        compactCalendarView.setCurrentDate(c.getTime());
+                        selectedDateDepart = c.getTimeInMillis();
+                    }
+                } else {
+                    if(currentFirstVisible < firstVisibleInListview){
+                        c.add(Calendar.DATE,-1);
+                        compactCalendarView.setCurrentDate(c.getTime());
+                        selectedDateDepart = c.getTimeInMillis();
+                    }
+                        //Log.i("RecyclerView scrolled: ", "scroll DOWN!");
+                }
+
+                firstVisibleInListview = currentFirstVisible;
+                getSupportActionBar().setTitle(DateFormater.dateFormatMonth(new Date(selectedDateDepart)));
+                /*
+                if(currentFirstVisible > firstVisibleInListview)
+                    Log.i("RecyclerView scrolled: ", "scroll up!");
+                else
+                    Log.i("RecyclerView scrolled: ", "scroll down!");
+                */
+
+
             }
+
+
         });
-        */
+
 
 
     }
@@ -223,7 +259,9 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         //loadMonthEvents();
         loadAllEvents();
-        //compactCalendarView.showCalendarWithAnimation();
+
+        layoutManagerRecyclerView.scrollToPositionWithOffset(adapterRecyclerView.getDatePosition(selectedDateDepart),0);
+
 
         // pour effacer les valeurs des moins unique afin de recharger les nouvelles date de debut de chaque mois
         EventCellAdapter.getMapUniqueMonth().clear();
@@ -234,8 +272,34 @@ public class MainActivity extends AppCompatActivity
 
     public void loadAllEvents(){
         loadAllCallendarEvent();
-        List<Long> distinctEventsDate = evenementDAO.findDistinctAllEvents();
-        adapterRecyclerView.setmDataSet(distinctEventsDate);
+        //List<Long> distinctEventsDate = evenementDAO.findDistinctAllEvents();
+        //adapterRecyclerView.setmDataSet(distinctEventsDate);
+
+
+
+        List<Long> dates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(DateFormater.getDateWithoutTime());
+        calendar.set(Calendar.MONTH,Calendar.JANUARY );
+
+        int startYear = calendar.get(Calendar.YEAR) - 5;
+        int endYear = calendar.get(Calendar.YEAR) + 5;
+        int currentYear = startYear;
+        calendar.set(Calendar.YEAR,startYear);
+
+        while (currentYear <= endYear){
+            calendar.add(Calendar.DATE,1);
+            dates.add(calendar.getTimeInMillis());
+            currentYear = calendar.get(Calendar.YEAR);
+        }
+
+        /*for(int i = 1;i<1000;i++){
+            //calendar.set(Calendar.DAY_OF_YEAR,i);
+            calendar.add(Calendar.DATE,1);
+            dates.add(calendar.getTimeInMillis());
+            Log.e("Date", DateFormater.dateFormatYyMmDd(new Date(calendar.getTimeInMillis())) + " Long : "+calendar.getTimeInMillis());
+        }*/
+        adapterRecyclerView.setmDataSet(dates);
     }
 
 
