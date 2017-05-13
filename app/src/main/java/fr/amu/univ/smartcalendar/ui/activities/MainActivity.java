@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private Calendar calendar = Calendar.getInstance();
     private LinearLayoutManager layoutManagerRecyclerView;
     private static int firstVisibleInListview;
+    private boolean calendarClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +91,16 @@ public class MainActivity extends AppCompatActivity
             public void onDayClick(Date dateClicked) {
                 selectedDateDepart = dateClicked.getTime();
                 layoutManagerRecyclerView.scrollToPositionWithOffset(adapterRecyclerView.getDatePosition(dateClicked.getTime()), 0);
-                }
+                calendarClicked = true;
+            }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 getSupportActionBar().setTitle(DateFormater.dateFormatMonth(firstDayOfNewMonth));
                 selectedDateDepart = firstDayOfNewMonth.getTime();
                 layoutManagerRecyclerView.scrollToPositionWithOffset(adapterRecyclerView.getDatePosition(firstDayOfNewMonth.getTime()),0);
-
-
+                compactCalendarView.setCurrentDate(firstDayOfNewMonth);
+                calendarClicked = true;
             }
 
         });
@@ -143,27 +145,29 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                int currentFirstVisible = layoutManagerRecyclerView.findFirstVisibleItemPosition();
-                Calendar c = Calendar.getInstance();
-                c.setTimeInMillis(selectedDateDepart);
-                if (dy > 0) {
-                    if(currentFirstVisible > firstVisibleInListview) {
-                        c.add(Calendar.DATE,1);
-                        compactCalendarView.setCurrentDate(c.getTime());
-                        selectedDateDepart = c.getTimeInMillis();
-                    }
-                } else {
-                    if(currentFirstVisible < firstVisibleInListview){
-                        c.add(Calendar.DATE,-1);
-                        compactCalendarView.setCurrentDate(c.getTime());
-                        selectedDateDepart = c.getTimeInMillis();
-                    }
+                if (!calendarClicked) {
+                    int currentFirstVisible = layoutManagerRecyclerView.findFirstVisibleItemPosition();
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(selectedDateDepart);
+                    if (dy > 0) {
+                        if (currentFirstVisible > firstVisibleInListview) {
+                            c.add(Calendar.DATE, 1);
+                            compactCalendarView.setCurrentDate(c.getTime());
+                            selectedDateDepart = c.getTimeInMillis();
+                            Log.i("RecyclerView scrolled: ", "scroll up!");
+                        }
+                    } else {
+                        if (currentFirstVisible < firstVisibleInListview) {
+                            c.add(Calendar.DATE, -1);
+                            compactCalendarView.setCurrentDate(c.getTime());
+                            selectedDateDepart = c.getTimeInMillis();
+                            Log.i("RecyclerView scrolled: ", "scroll DOWN!");
+                        }
                         //Log.i("RecyclerView scrolled: ", "scroll DOWN!");
-                }
+                    }
 
-                firstVisibleInListview = currentFirstVisible;
-                getSupportActionBar().setTitle(DateFormater.dateFormatMonth(new Date(selectedDateDepart)));
+                    firstVisibleInListview = currentFirstVisible;
+                    getSupportActionBar().setTitle(DateFormater.dateFormatMonth(new Date(selectedDateDepart)));
                 /*
                 if(currentFirstVisible > firstVisibleInListview)
                     Log.i("RecyclerView scrolled: ", "scroll up!");
@@ -172,8 +176,10 @@ public class MainActivity extends AppCompatActivity
                 */
 
 
+                } else {
+                    calendarClicked = false;
+                }
             }
-
 
         });
 
