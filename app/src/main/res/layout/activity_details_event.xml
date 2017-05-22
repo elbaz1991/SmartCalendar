@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="fr.amu.univ.smartcalendar.ui.activities.AddEventActivity"
-    tools:showIn="@layout/activity_add_event"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:verticalScrollbarPosition="right">
@@ -15,6 +14,105 @@
     android:orientation="vertical"
     android:background="@color/colorWhiteSmoke"
     >
+
+    <!---Météo -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/weather_layout"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smart_calendar_weather_city_name"
+            android:layout_alignParentStart="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smart_calendar_weather_date"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/smart_calendar_weather_date"
+            android:id="@+id/smart_calendar_weather_temperature_detail_wrapper"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/smart_calendar_weather_activity_day_max_temperature_label"
+                android:text="@string/smart_calendar_max_temperature_label"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/smart_calendar_weather_activity_day_max_temperature"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_calendar_weather_temperature_separator"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/smart_calendar_weather_activity_day_min_temperature_label"
+                android:text="@string/smart_calendar_min_temperature_label"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/smart_calendar_weather_activity_day_min_temperature"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-light"
+                />
+        </LinearLayout>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/smart_calendar_weather_main_data"
+            android:layout_below="@+id/smart_calendar_weather_temperature_detail_wrapper">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:id="@+id/smart_calendar_weather_app_photo"
+                android:contentDescription="" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/smart_calendar_weather_temperature"
+                android:layout_marginTop="25dp"
+                android:textSize="36sp"
+                android:layout_marginStart="30dp"
+                />
+        </GridLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/couleurDetails"
@@ -218,18 +316,20 @@
         android:layout_marginLeft="5dp"
         android:focusable="false"
         >
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+
+        <fragment
             android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
+
 
 
     </LinearLayout>
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

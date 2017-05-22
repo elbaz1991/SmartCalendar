@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,11 +30,16 @@ import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
 import fr.amu.univ.smartcalendar.model.entity.Evenement;
 import fr.amu.univ.smartcalendar.outils.DateFormater;
+import fr.amu.univ.smartcalendar.plugins.weather.SmartCalendarWeather;
+import fr.amu.univ.smartcalendar.plugins.weather.api.SmartCalendarWeatherCallBack;
+import fr.amu.univ.smartcalendar.plugins.weather.constants.SmartCalendarWeatherUrl;
+import fr.amu.univ.smartcalendar.plugins.weather.models.SmartCalendarWeatherModel;
+import fr.amu.univ.smartcalendar.utils.SmartCalendarImageLoader;
 
 import static fr.amu.univ.smartcalendar.R.id.spinner;
 
-public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback, SmartCalendarWeatherCallBack {
+    private static final String WEATHER_API_SERVER_KEY = "c631d13091388de7ae8c89007238da75";
     private EvenementDAO evenementDAO = new EvenementDAO(this);
     private DateFormater dateFormater = new DateFormater();
     private TextView ui_titreDeLevenement;
@@ -156,7 +162,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(DetailsEventActivity.this);
 
-
+        /** inserting weather data **/
+        LatLng destination = new LatLng(43.523135, 5.438303);
+        SmartCalendarWeather.createWithServerKey(WEATHER_API_SERVER_KEY).setDestination(destination).execute(this);
 
 
 
@@ -252,6 +260,39 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 }
             }
         }
+    }
+
+    @Override
+    public void onWeatherSuccess(final SmartCalendarWeatherModel weather, String data){
+        if(weather.getCode() == 200) {
+            //activity_title.setText("transmission reussie " + weather.getCityName());
+            /*activityTemperature = (TextView)findViewById(R.id.smart_calendar_weather_activity_day_of_week);
+            activityDayOfWeek.setText(String.valueOf(weather.getData().getTemperature()));
+            activityDayOfWeek.setText(String.valueOf(weather.getData().getMaxTemperature()));
+            activityDayOfWeek.setText(String.valueOf(weather.getData().getMinTemperature()));*/
+            TextView activity_weather_city_name = (TextView)findViewById(R.id.smart_calendar_weather_city_name);
+            activity_weather_city_name.setText(weather.getCityName());
+
+            TextView activity_max_temp = (TextView)findViewById(R.id.smart_calendar_weather_activity_day_max_temperature);
+            activity_max_temp.setText(String.valueOf(weather.getData().getMaxTemperature()));
+
+            TextView activity_min_temp = (TextView)findViewById(R.id.smart_calendar_weather_activity_day_min_temperature);
+            activity_min_temp.setText(String.valueOf(weather.getData().getMinTemperature()));
+
+            TextView activity_day_temp = (TextView)findViewById(R.id.smart_calendar_weather_temperature);
+            activity_day_temp.setText(String.valueOf(weather.getData().getMinTemperature()));
+
+            SmartCalendarImageLoader imageLoader = new SmartCalendarImageLoader(DetailsEventActivity.this);
+            String weatherIconPath = SmartCalendarWeatherUrl.WEATHER_API_ICON_ROOT_URL + weather.getWeathers().get(0).getIcon() + ".png";
+            imageLoader.displayImage(weatherIconPath, (ImageView)findViewById(R.id.smart_calendar_weather_app_photo));
+        }
+
+    }
+
+    @Override
+    public void onWeatherFailure(Throwable ignored){
+        Log.d("DEBUG", ignored.getMessage());
+        //activity_title.setText("error appened");
     }
 
 }

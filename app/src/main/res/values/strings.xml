@@ -61,4 +61,23 @@
     <string name="title_activity_asynchronous">Asynchronous Events</string>
     <string name="async_error">Could not download events from the internet</string>
     <string name="title_activity_multiple_view">Smart Calendar</string>
+    <string name="smart_calendar_show_traffic" >Afficher le traffic</string>
+    <string name="smart_calendar_show_location" >Afficher ma position</string>
+    <string name="smart_calendar_show_buildings" >Afficher Immeuble</string>
+    <string name="smart_calendar_show_indoor" >Afficher Interi</string>
+    <string name="smart_calendar_map_not_ready" >map is not ready</string>
+    <string name="smart_calendar_normal_map" >Normal</string>
+    <string name="smart_calendar_hybrid_map" >Hybrid</string>
+    <string name="smart_calendar_satellite_map" >Satellite</string>
+    <string name="smart_calendar_terrain_map" >Terrain</string>
+    <string name="smart_calendar_none_map" >None</string>
+    <string name="smart_calendar_permission_rational_location" >rational location</string>
+    <string name="smart_calendar_permission_required_toast" >permission exigée</string>
+    <string name="smart_calendar_location_permission_denied" >permission refusée</string>
+    <string name="smart_calendar_itinerary_label" >Itinéraire</string>
+    <string name="smart_calendar_duration_label" >Durée</string>
+    <string name="smart_calendar_distance_label" >Distance</string>
+    <string name="smart_calendar_weather_temperature_separator" >|</string>
+    <string name="smart_calendar_max_temperature_label" >Max</string>
+    <string name="smart_calendar_min_temperature_label" >Min</string>
 </resources>
