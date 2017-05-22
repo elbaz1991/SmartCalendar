@@ -164,7 +164,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         /** inserting weather data **/
         LatLng destination = new LatLng(43.523135, 5.438303);
-        SmartCalendarWeather.createWithServerKey(WEATHER_API_SERVER_KEY).setDestination(destination).execute(this);
+        SmartCalendarWeather.createWithServerKey(WEATHER_API_SERVER_KEY).setDestination(destination).execute(DetailsEventActivity.this);
 
 
 

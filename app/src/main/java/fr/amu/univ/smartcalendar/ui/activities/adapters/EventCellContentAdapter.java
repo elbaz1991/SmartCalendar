@@ -112,7 +112,7 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
                 public void onClick(View view) {
                //      Toast.makeText(view.getContext(),"cell clicked : "+holder.itemView.getTag(),Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(holder.itemView.getContext(), DetailsEventActivity.class);
+                    Intent intent = new Intent(mainActivity, DetailsEventActivity.class);
                     intent.putExtra("idEvenement",(int)holder.itemView.getTag());
 
                     mainActivity.startActivity(intent);
