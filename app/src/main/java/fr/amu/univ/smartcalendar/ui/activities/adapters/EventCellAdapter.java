@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.amu.univ.smartcalendar.ui.activities.multiple.view.BasicActivity;
+import fr.amu.univ.smartcalendar.ui.activities.multiple.view.MultipleViewActivity;
 import fr.amu.univ.smartcalendar.outils.DateFormater;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
@@ -116,7 +115,7 @@ public class EventCellAdapter extends RecyclerView.Adapter<EventCellAdapter.Even
                 public void onClick(View view) {
                     //Toast.makeText(view.getContext(),view.getTag().toString(),Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(mainActivity.getApplicationContext(), BasicActivity.class);
+                    Intent intent = new Intent(mainActivity.getApplicationContext(), MultipleViewActivity.class);
                     intent.putExtra("date",Long.valueOf(view.getTag().toString()));
                     mainActivity.startActivity(intent);
 

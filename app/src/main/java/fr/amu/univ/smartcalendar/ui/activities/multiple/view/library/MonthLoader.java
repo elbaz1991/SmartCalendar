@@ -1,5 +1,7 @@
 package fr.amu.univ.smartcalendar.ui.activities.multiple.view.library;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.List;
 

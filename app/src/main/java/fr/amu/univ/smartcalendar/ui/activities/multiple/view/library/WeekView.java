@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
@@ -42,6 +43,8 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.amu.univ.smartcalendar.R;
+import fr.amu.univ.smartcalendar.outils.DateFormater;
+import fr.amu.univ.smartcalendar.ui.activities.multiple.view.BaseActivity;
 
 import static fr.amu.univ.smartcalendar.ui.activities.multiple.view.library.WeekViewUtil.*;
 import static fr.amu.univ.smartcalendar.ui.activities.multiple.view.library.WeekViewUtil.isSameDay;
@@ -169,6 +172,8 @@ public class WeekView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            //Log.e("Scrool","Yeeeeeeee" + getTimeFromPoint(50,60).get(Calendar.MONTH));
+
             // Check if view is zoomed.
             if (mIsZooming)
                 return true;
@@ -249,6 +254,7 @@ public class WeekView extends View {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.e("Clique","Clique");
             // If the tap was on an event then trigger the callback.
             if (mEventRects != null && mEventClickListener != null) {
                 List<EventRect> reversedEventRects = mEventRects;
@@ -550,6 +556,7 @@ public class WeekView extends View {
     }
 
     private void drawHeaderRowAndEvents(Canvas canvas) {
+
         // Calculate the available width for each day.
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding *2;
         mWidthPerDay = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);
@@ -753,6 +760,7 @@ public class WeekView extends View {
      * @return The time and date at the clicked position.
      */
     private Calendar getTimeFromPoint(float x, float y){
+        //Log.e("Position","x : "+x+" y : "+y);
         int leftDaysWithGaps = (int) -(Math.ceil(mCurrentOrigin.x / (mWidthPerDay + mColumnGap)));
         float startPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps +
                 mHeaderColumnWidth;
@@ -1303,10 +1311,14 @@ public class WeekView extends View {
      * @return The date, time interpreter.
      */
     public DateTimeInterpreter getDateTimeInterpreter() {
+
         if (mDateTimeInterpreter == null) {
             mDateTimeInterpreter = new DateTimeInterpreter() {
                 @Override
                 public String interpretDate(Calendar date) {
+                    //Log.e("ApppelWithDate","Yyooyoyo : "+date.get(Calendar.MONTH));
+                    BaseActivity.bar.setTitle(DateFormater.dateFormatMonth(date.getTime()));
+
                     try {
                         SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE dd/MM", Locale.getDefault()) : new SimpleDateFormat("EEE dd/MM", Locale.getDefault());
                         return sdf.format(date.getTime()).toUpperCase();
@@ -2033,6 +2045,14 @@ public class WeekView extends View {
          * @param time: {@link Calendar} object set with the date and time of the long pressed position on the view.
          */
         void onEmptyViewLongPress(Calendar time);
+    }
+
+    public interface EmptyViewPressListener {
+        /**
+         * Similar to {@link com.alamkanak.weekview.WeekView.EmptyViewClickListener} but with long press.
+         * @param time: {@link Calendar} object set with the date and time of the long pressed position on the view.
+         */
+        void onEmptyViewPressListener(Calendar time);
     }
 
     public interface ScrollListener {

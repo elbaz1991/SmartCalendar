@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         // modification
         //Toast.makeText(this,"rappel :  "+evenement.getRappel1(),Toast.LENGTH_SHORT).show();
+
 
         ui_couleurDetails.setBackgroundColor(evenement.getColor());
 

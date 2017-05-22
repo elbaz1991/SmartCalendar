@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ui.activities.multiple.view.BasicActivity"
+            android:name=".ui.activities.multiple.view.MultipleViewActivity"
             android:label="@string/title_activity_multiple_view"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 

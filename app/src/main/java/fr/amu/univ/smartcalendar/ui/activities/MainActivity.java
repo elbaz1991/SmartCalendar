@@ -3,9 +3,6 @@ package fr.amu.univ.smartcalendar.ui.activities;
 
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,32 +17,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
-import com.google.android.gms.analytics.ecommerce.Product;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import fr.amu.univ.smartcalendar.model.bean.ColorEvent;
 import fr.amu.univ.smartcalendar.model.entity.Evenement;
 import fr.amu.univ.smartcalendar.outils.DateFormater;
 import fr.amu.univ.smartcalendar.R;
 import fr.amu.univ.smartcalendar.model.dao.EvenementDAO;
 import fr.amu.univ.smartcalendar.ui.activities.adapters.EventCellAdapter;
+import fr.amu.univ.smartcalendar.ui.activities.multiple.view.MultipleViewActivity;
+
+import static fr.amu.univ.smartcalendar.R.id.dateDebut;
 
 
 public class MainActivity extends AppCompatActivity
@@ -69,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager layoutManagerRecyclerView;
     private static int firstVisibleInListview;
     private boolean calendarClicked = false;
+    private NavigationView ui_navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +101,13 @@ public class MainActivity extends AppCompatActivity
         addEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedDateDepart != 0)
-                    openAddEvent.putExtra("selectedDateDepart", selectedDateDepart);
-                startActivity(openAddEvent);
+                if (selectedDateDepart != 0) {
+                    Calendar c = (Calendar) calendar.clone();
+                    c.setTimeInMillis(selectedDateDepart);
+                    c.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    c.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                    openAddEvent.putExtra("selectedDateDepart", c.getTimeInMillis());
+                }startActivity(openAddEvent);
             }
         });
 
@@ -140,6 +134,8 @@ public class MainActivity extends AppCompatActivity
         layoutManagerRecyclerView = (LinearLayoutManager) ui_eventListRecyclerView.getLayoutManager();
         firstVisibleInListview = layoutManagerRecyclerView.findFirstVisibleItemPosition();
 
+
+        ui_navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         ui_eventListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -197,6 +193,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -229,18 +226,22 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if(id!= R.id.main_viewMonth) {
+            Intent intent = new Intent(this, MultipleViewActivity.class);
+            if (id == R.id.main_viewDay) {
+                intent.putExtra("viewType", 1);
+            } else if (id == R.id.main_view3Days) {
+                intent.putExtra("viewType", 3);
+            } else if (id == R.id.main_view7Days) {
+                intent.putExtra("viewType", 7);
+            }
+            startActivity(intent);
+            //finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -272,6 +273,7 @@ public class MainActivity extends AppCompatActivity
         // pour effacer les valeurs des moins unique afin de recharger les nouvelles date de debut de chaque mois
         EventCellAdapter.getMapUniqueMonth().clear();
 
+        ui_navigationView.getMenu().getItem(0).setChecked(true);
     }
 
 
@@ -288,8 +290,8 @@ public class MainActivity extends AppCompatActivity
         calendar.setTimeInMillis(DateFormater.getDateWithoutTime());
         calendar.set(Calendar.MONTH,Calendar.JANUARY );
 
-        int startYear = calendar.get(Calendar.YEAR) - 5;
-        int endYear = calendar.get(Calendar.YEAR) + 5;
+        int startYear = calendar.get(Calendar.YEAR) - 15;
+        int endYear = calendar.get(Calendar.YEAR) + 15;
         int currentYear = startYear;
         calendar.set(Calendar.YEAR,startYear);
 
@@ -299,12 +301,7 @@ public class MainActivity extends AppCompatActivity
             currentYear = calendar.get(Calendar.YEAR);
         }
 
-        /*for(int i = 1;i<1000;i++){
-            //calendar.set(Calendar.DAY_OF_YEAR,i);
-            calendar.add(Calendar.DATE,1);
-            dates.add(calendar.getTimeInMillis());
-            Log.e("Date", DateFormater.dateFormatYyMmDd(new Date(calendar.getTimeInMillis())) + " Long : "+calendar.getTimeInMillis());
-        }*/
+
         adapterRecyclerView.setmDataSet(dates);
     }
 

@@ -3,21 +3,22 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/main_viewMonth"
             android:icon="@drawable/ic_calendar"
             android:title="Calendrier"
+            android:checked="true"
             />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/main_viewDay"
             android:icon="@drawable/ic_view_day_24dp"
             android:title="Jour"
-            android:checked="true"/>
+            />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/main_view3Days"
             android:icon="@drawable/ic_view_3day_24dp"
             android:title="3 Jours" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/main_view7Days"
             android:icon="@drawable/ic_view_week_24dp"
             android:title="Semaines" />
     </group>

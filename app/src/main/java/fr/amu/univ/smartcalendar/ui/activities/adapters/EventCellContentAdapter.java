@@ -172,6 +172,7 @@ public class EventCellContentAdapter extends RecyclerView.Adapter<EventCellConte
                 }
             });
 
+           
 
 
         }

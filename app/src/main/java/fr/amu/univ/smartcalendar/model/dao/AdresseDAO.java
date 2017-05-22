@@ -87,6 +87,32 @@ public class AdresseDAO extends DatabaseDAO{
 
 
     /**
+     * @param eventId l'identifiant de l'évènement
+     * @param adresseid l'identifiant de l'évènement
+     */
+    public Adresse findByEventAndAdresseIds(String eventId,String adresseid){
+
+        if(eventId != null) {
+            Adresse adresse = new Adresse();
+            String query = "SELECT * FROM Adresse WHERE " + AdresseDAO.COL_ID_EVENT + "='" + eventId + "'" +
+                    " AND " + AdresseDAO.COL_ID_ADRESSE + "='" + adresseid + "'";
+            open();
+            Cursor cursor = db.rawQuery(query, null);
+            while (cursor.moveToNext()){
+                adresse.setIdAdresse(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_ID_ADRESSE)));
+                adresse.setAdresse(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_ADRESSE)));
+                adresse.setIdEvent(cursor.getInt(cursor.getColumnIndex(AdresseDAO.COL_ID_EVENT)));
+                adresse.setNom(cursor.getString(cursor.getColumnIndex(AdresseDAO.COL_NOM)));
+                adresse.setLatitude(cursor.getDouble(cursor.getColumnIndex(AdresseDAO.COL_LATITUDE)));
+                adresse.setLongitude(cursor.getDouble(cursor.getColumnIndex(AdresseDAO.COL_LONGITUDE)));
+                return adresse;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * @author elbaz
      * @param idEvent l'evenement à supprimer de la base
      */

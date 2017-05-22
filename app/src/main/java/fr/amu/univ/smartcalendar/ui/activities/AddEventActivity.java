@@ -42,6 +42,9 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -148,15 +151,17 @@ public class AddEventActivity extends AppCompatActivity {
         dateDebut.setTimeInMillis(DateDepart);
 
 
+        /*
         // Si l'utilisateut à choisi une date on mis à jour l'heures 00:00
         if(DateDepart != calendar.getTimeInMillis()) {
-            dateDebut.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-            dateDebut.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+            //dateDebut.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+            //dateDebut.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
         }
+        */
 
         dateFin = Calendar.getInstance();
         dateFin.setTime(dateDebut.getTime());
-        dateFin.set(Calendar.HOUR_OF_DAY, (calendar.get(Calendar.HOUR_OF_DAY))+1);
+        dateFin.set(Calendar.HOUR_OF_DAY, (dateDebut.get(Calendar.HOUR_OF_DAY))+1);
 
 
 
@@ -349,7 +354,6 @@ public class AddEventActivity extends AppCompatActivity {
         boolean etatEnregistrement = evenementDAO.insert(event);
         if(etatEnregistrement) {
             int lastInsertedEventId = evenementDAO.getLastInsertedId();
-            Log.e("Id"," : "+lastInsertedEventId);
             if (placeDepart != null)
                 etatEnregistrement &= adresseDAO.insert(new Adresse(placeDepart),lastInsertedEventId);
 
@@ -376,7 +380,14 @@ public class AddEventActivity extends AppCompatActivity {
 
     public void showPlacePicker(int ID_REQUEST){
         try {
+
+
             PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            if(placeDepart!=null) {
+                LatLngBounds BOUNDS= new LatLngBounds(
+                        new LatLng(placeDepart.getLatLng().latitude, placeDepart.getLatLng().longitude), new LatLng(placeDepart.getLatLng().latitude, placeDepart.getLatLng().longitude));
+                intentBuilder.setLatLngBounds(BOUNDS);
+            }
             Intent intent = intentBuilder.build(this);
 
             // Start the Intent by requesting a result, identified by a request code.

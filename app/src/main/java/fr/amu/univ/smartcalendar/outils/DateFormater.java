@@ -146,6 +146,25 @@ public class DateFormater {
         c.setTimeInMillis(date);
         return Integer.valueOf(dateFormatdd.format(c.getTime()));
     }
+
+
+    public static boolean isAllDay(long dateDebut,long dateFin){
+        if(getDifferenceDays(dateDebut,dateFin) > 0)
+            return true;
+        else {
+            Calendar mdateDebut = Calendar.getInstance();
+            mdateDebut.setTimeInMillis(dateDebut);
+
+            Calendar mdateFin = Calendar.getInstance();
+            mdateFin.setTimeInMillis(dateFin);
+            if((int) mdateDebut.get(Calendar.HOUR_OF_DAY) == 0 && (int) mdateDebut.get(Calendar.MINUTE) == 0 ){
+                if((int) mdateFin.get(Calendar.HOUR_OF_DAY) == 23 && (int) mdateFin.get(Calendar.MINUTE) == 59 )
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 

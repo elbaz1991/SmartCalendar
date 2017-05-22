@@ -3,9 +3,11 @@ package fr.amu.univ.smartcalendar.ui.activities.multiple.view;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,15 +15,21 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import fr.amu.univ.smartcalendar.R;
+import fr.amu.univ.smartcalendar.outils.DateFormater;
+import fr.amu.univ.smartcalendar.ui.activities.AddEventActivity;
+import fr.amu.univ.smartcalendar.ui.activities.DetailsEventActivity;
+import fr.amu.univ.smartcalendar.ui.activities.MainActivity;
 import fr.amu.univ.smartcalendar.ui.activities.multiple.view.library.DateTimeInterpreter;
 import fr.amu.univ.smartcalendar.ui.activities.multiple.view.library.MonthLoader;
 import fr.amu.univ.smartcalendar.ui.activities.multiple.view.library.WeekView;
@@ -39,7 +47,8 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_DAY_VIEW;
     protected WeekView mWeekView;
-
+    private NavigationView ui_navigationView;
+    public static ActionBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        bar = getSupportActionBar();
+        //getSupportActionBar().setTitle(DateFormater.dateFormatMonth(Calendar.getInstance().getTime()));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,9 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
         // Set up a date time interpreter to interpret how the date and time will be formatted in
         // the week view. This is optional.
-        setupDateTimeInterpreter(false);
 
-        mWeekView.setNumberOfVisibleDays(TYPE_DAY_VIEW);
+
+
 
         Intent intent = getIntent();
         Calendar c = Calendar.getInstance();
@@ -88,10 +98,29 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         c.setTimeInMillis(date);
         mWeekView.goToDate(c);
 
+        int viewType = intent.getIntExtra("viewType",TYPE_DAY_VIEW);
+        mWeekView.setNumberOfVisibleDays(viewType);
 
+        ui_navigationView = (NavigationView) findViewById(R.id.nav_view);
+        switch (viewType){
+            case 1:
+                ui_navigationView.getMenu().getItem(1).setChecked(true);break;
+            case 3:
+                ui_navigationView.getMenu().getItem(2).setChecked(true);break;
+            case 7:
+                ui_navigationView.getMenu().getItem(3).setChecked(true);break;
+        }
 
-
-
+        final Intent openAddEvent = new Intent(this, AddEventActivity.class);
+        FloatingActionButton addEventBtn = (FloatingActionButton) findViewById(R.id.addEventBtn);
+        addEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddEvent.putExtra("selectedDateDepart", mWeekView.getLastVisibleDay().getTimeInMillis());
+                startActivity(openAddEvent);
+                
+            }
+        });
     }
 
     @Override
@@ -136,9 +165,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 }
                 return true;
             case R.id.action_three_day_view:
-                Log.e("Yeees","uoooioiomkmlklklmkm");
                 if (mWeekViewType != TYPE_THREE_DAY_VIEW) {
-                    Log.e("Yeees","uuuuuuuuuuuuuuuuuuuuu");
                     item.setChecked(!item.isChecked());
                     mWeekViewType = TYPE_THREE_DAY_VIEW;
                     mWeekView.setNumberOfVisibleDays(3);
@@ -222,7 +249,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(this, "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailsEventActivity.class);
+        intent.putExtra("idEvenement",(int) event.getId());
+        startActivity(intent);
     }
 
     @Override
@@ -232,7 +261,11 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-        Toast.makeText(this, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
+       //Toast.makeText(this, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
+        final Intent openAddEvent = new Intent(this, AddEventActivity.class);
+               openAddEvent.putExtra("selectedDateDepart", time.getTimeInMillis());
+                startActivity(openAddEvent);
+
     }
 
 
@@ -243,31 +276,64 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
 
 
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        setupDateTimeInterpreter(id == R.id.action_week_view);
+        switch (id){
+            case R.id.main_viewMonth:
+                //Intent intent = new Intent(this, MainActivity.class);
+                //startActivity(intent);
+                finish();
+                break;
+            case R.id.main_viewDay:
+                if (mWeekViewType != TYPE_DAY_VIEW) {
+                    item.setChecked(!item.isChecked());
+                    mWeekViewType = TYPE_DAY_VIEW;
+                    mWeekView.setNumberOfVisibleDays(1);
 
-        } else if (id == R.id.nav_manage) {
+                    // Lets change some dimensions to best fit the view.
+                    mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+                    mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                }
+                break;
+            case R.id.main_view3Days:
+                if (mWeekViewType != TYPE_THREE_DAY_VIEW) {
+                    item.setChecked(!item.isChecked());
+                    mWeekViewType = TYPE_THREE_DAY_VIEW;
+                    mWeekView.setNumberOfVisibleDays(3);
 
+                    // Lets change some dimensions to best fit the view.
+                    mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+                    mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                }
+                break;
+            case R.id.main_view7Days:
+                if (mWeekViewType != TYPE_WEEK_VIEW) {
+                    item.setChecked(!item.isChecked());
+                    mWeekViewType = TYPE_WEEK_VIEW;
+                    mWeekView.setNumberOfVisibleDays(7);
+
+                    // Lets change some dimensions to best fit the view.
+                    mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
+                    mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+                    mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+                    setupDateTimeInterpreter(true);
+                }
+                break;
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
 
 
 }

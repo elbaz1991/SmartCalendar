@@ -186,6 +186,10 @@ public class EvenementDAO extends DatabaseDAO{
             d.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COL_DATE_FIN)));
             event.setDateFin(d);
             event.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLEUR)));
+            event.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+            String adresseRdv = cursor.getString(cursor.getColumnIndex(COL_ADRESSE_DEPART));
+            if(adresseRdv != null)
+                event.setAdresseRdv(adresseDAO.findByAdresseId(adresseRdv));
             li.add(event);
         }
         close();
